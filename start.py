@@ -112,11 +112,11 @@ def object_select():
     #v_object_select[0] = int((player.get_position()[0][0]+0.16) * 3.125)
     #v_object_select[1] = int((player.get_position()[0][1]+0.16) * 3.125)
     #tmp = math.degrees(radians)
-    position = (player.get_position()[0][0]+(math.cos(radians)*0.4),player.get_position()[0][1]+(math.sin(radians)*0.4))
+    position = (player.get_position()[0][0]+(math.cos(radians)*0.5),player.get_position()[0][1]+(math.sin(radians)*0.5))
     #print "init"
     #print v_object_select
-    v_object_select[0] = position[0] * 3.125
-    v_object_select[1] = position[1] * 3.125
+    v_object_select[0] = int((position[0]+0.16) * 3.125)
+    v_object_select[1] = int((position[1]+0.16) * 3.125)
     #print tmp
     #90 top
     #if tmp > 0 and tmp < 45:
@@ -198,9 +198,13 @@ def update():
     clear_objects(2)
     object_select()
     #joint_check()
-    Lchunk[0].pick_object(player.get_position())
+    #draw posible options
+    draw_posible_options()
 
     player.move(wasd, t_delta, radians)
+
+def draw_posible_options():
+    Lchunk[0].check_object(v_object_select)
 
 def initFun():
     print "initFun"

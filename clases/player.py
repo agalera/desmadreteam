@@ -195,11 +195,11 @@ class player:
             tmp = disparos(self.world.CreateDynamicBody(
                             position=(body_tmp.position[0]+(math.cos(radians)*0.4),body_tmp.position[1]+(math.sin(radians)*0.4)),
                             bullet=True,angle = body_tmp.angle,  angularDamping=5.0, linearDamping= 1.0,
-                            fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/10)), density=10.0),
+                            fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/100)), density=10.0),
                             linearVelocity=(30*math.cos(radians), 30*math.sin(radians))), 1)
             self.bullet.append(tmp)
             #print tmp.get_body()
-            self.create_rope(tmp.get_body(), tmp.get_body().position, 4.0)
+            self.create_rope(tmp.get_body(), tmp.get_body().position, 1.0)
 
         if(wasd[4] == 0 and self.hook_status == 1):
             self.hook_status = 0

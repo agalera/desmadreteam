@@ -20,10 +20,14 @@ class chunk:
         self.worlds = worlds
         self.load_map()
 
+    def check_object(self, position):
+        x = int(position[0])
+        y = int(position[1])
+        return self.Matrix[2][x][y].get_tile()
     def pick_object(self, position): #deprecated
         try:
-            x = int(position[0][0]*3.10)+1
-            y = int(position[0][1]*3.10)+1
+            x = int(position[0])
+            y = int(position[1])
             xp = int(x/20)
             if (self.Matrix[2][x][y].get_tile() != -1):
                 tile = self.Matrix[2][x][y].get_tile()
@@ -127,6 +131,7 @@ class chunk:
                 string_tmp = pepe[0][pos_tmp+8:]
                 pos_tmp = string_tmp.find('"')
                 self.total_y = int(string_tmp[:pos_tmp])
+                y = self.total_y-1
                 print self.total_x, self.total_y
                 xasd = 0
                 MatrixT = [[0 for xasd in xrange(self.total_y)] for xasd in xrange(self.total_x)]
@@ -148,7 +153,7 @@ class chunk:
                 estado = 0
                 self.Matrix.append(copy.deepcopy(MatrixT))
                 x = -1
-                y = 29
+                y = self.total_y-1
             elif estado == 1:
                 for taa in pepe:
                     if taa != "":
