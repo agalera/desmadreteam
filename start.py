@@ -30,7 +30,7 @@ wasd = [0,0,0,0,0,[0,0,0]]
 Lchunk = []
 size_tile = 0.16
 calculate_size = size_tile
-
+v_object_select = [0,0]
 borrar = []
 textures = []
 bullet = []
@@ -74,27 +74,27 @@ def create_camera():
     glRotate(0, 0, 0, 1)
     camera = player.get_position()[0]
     glTranslatef( -camera[0] , -camera[1], 0);
+
 def ControlRatonPos(x,y):
-	global radians
-	radians = (math.atan2(-((resolution[1]/2)-y), (resolution[0]/2)-x)- 3.14159266)
-	#print x,y
+    global radians
+    radians = (math.atan2(-((resolution[1]/2)-y), (resolution[0]/2)-x)+ 3.14159266)
+
 def ControlRaton(key,leave,x,y):
-	global wasd
-	global zoom
-	if key <= 2 :
-		ControlRatonPos(x,y)
-		wasd[5][key] = not leave
-	if (key == 3):
-	    zoom -= 0.08
-	    reshapeFun(resolution[0], resolution[1])
-	if (key == 4):
-	    zoom += 0.08
-	    reshapeFun(resolution[0], resolution[1])
+    global wasd
+    global zoom
+    if key <= 2 :
+        ControlRatonPos(x,y)
+        wasd[5][key] = not leave
+    if (key == 3):
+        zoom -= 0.08
+        reshapeFun(resolution[0], resolution[1])
+    if (key == 4):
+        zoom += 0.08
+        reshapeFun(resolution[0], resolution[1])
 
 def ControlTeclado(key,x,y):
     global wasd
     global radians
-
     if (key == "w"):
         wasd[0] = 1
     if (key == "a"):
@@ -105,6 +105,42 @@ def ControlTeclado(key,x,y):
         wasd[3] = 1
     if (key == "q"):
         wasd[4] = 1
+
+def object_select():
+    v_object_select[0] = int((player.get_position()[0][0]+0.16) * 3.125)
+    v_object_select[1] = int((player.get_position()[0][1]+0.16) * 3.125)
+    tmp = math.degrees(radians)
+    #print tmp
+    #90 top
+    if tmp > 0 and tmp < 45:
+        v_object_select[1] += 1
+        v_object_select[0] += 1
+        #print "right top"
+    if tmp > 45 and tmp < 90:
+        v_object_select[1] += 1
+        #print "top"
+    if tmp > 90 and tmp < 135:
+        v_object_select[1] += 1
+        v_object_select[0] -= 1
+        #print "left top"
+    if tmp > 135 and tmp < 180:
+        v_object_select[0] -= 1
+        #print "left"
+    if tmp > 180 and tmp < 225:
+        v_object_select[1] -= 1
+        v_object_select[0] -= 1
+        #print "left bottom"
+    if tmp > 225 and tmp < 270:
+        v_object_select[1] -= 1
+        #print "bottom"
+    if tmp > 270 and tmp < 315:
+        v_object_select[1] -= 1
+        v_object_select[0] += 1
+        #print "right bottom"
+    if tmp > 315 and tmp < 360:
+        v_object_select[0] += 1
+        #print "right"
+
 
 
 def ControlTecladoUp(key,x,y):
@@ -153,7 +189,7 @@ def update():
     world.Step(timeStep, vel_iters, pos_iters)
     world.ClearForces()
     clear_objects(2)
-
+    object_select()
     #joint_check()
     Lchunk[0].pick_object(player.get_position())
 
@@ -272,10 +308,38 @@ def RenderGLFun():
     setupTexture(2)
     for taa in list(bullet):
         taa.draw()
-
+    draw_select()
     #go to gpu
     glutSwapBuffers()
 
+def draw_select():
+    tile = 2
+    size_tile = 0.32
+    #v_object_select = player.get_position()[0]
+    #print v_object_select
+    bx = (v_object_select[0] * size_tile)
+    by = (v_object_select[1] * size_tile)
+
+    texture_info_temp = [int(tile), 0];
+    textureXOffset = float(texture_info_temp[0]/16.0)+0.001
+    textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
+    textureHeight  = float(0.060)
+    textureWidth   = float(0.060)
+
+    glBegin(GL_QUADS)
+    glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+    glVertex3f(bx-(size_tile/2), by-(size_tile/2), 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+    glVertex3f(bx + (size_tile/2), by-(size_tile/2), 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+    glVertex3f(bx + (size_tile/2), by+(size_tile/2), 0)
+
+    glTexCoord2f(textureXOffset,textureYOffset)
+    glVertex3f(bx-(size_tile/2),by+(size_tile/2), 0)
+
+    glEnd()
 def getDelta():
     global lastFrame
     #time = 7.000.000

@@ -15,7 +15,7 @@ class player:
     def __init__ (self, bullet,joints, borrar):
 
         #self.world = world
-        self.pos_init = [20.00,4.0]
+        self.pos_init = [20.0,1.0]
         #self.create_player()
         self.bullet = bullet
         self.borrar = borrar
@@ -171,9 +171,6 @@ class player:
         #        self.block_fire = 240.0
 
         if(wasd[5][0] == 1 and self.block_fire < 0):
-            sound = pygame.mixer.Sound("assets/test.wav")
-            sound.play()
-
             self.block_fire = 240.0
             self.bullet.append(disparos(self.world.CreateDynamicBody(
                 position=(body_tmp.position[0]+(math.cos(radians)*0.3),body_tmp.position[1]+(math.sin(radians)*0.3)),
