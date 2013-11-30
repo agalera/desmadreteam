@@ -104,42 +104,49 @@ def ControlTeclado(key,x,y):
     if (key == "d"):
         wasd[3] = 1
     if (key == "q"):
+        print [int(v_object_select[0]),int(v_object_select[1])]
+
         wasd[4] = 1
 
 def object_select():
-    v_object_select[0] = int((player.get_position()[0][0]+0.16) * 3.125)
-    v_object_select[1] = int((player.get_position()[0][1]+0.16) * 3.125)
-    tmp = math.degrees(radians)
+    #v_object_select[0] = int((player.get_position()[0][0]+0.16) * 3.125)
+    #v_object_select[1] = int((player.get_position()[0][1]+0.16) * 3.125)
+    #tmp = math.degrees(radians)
+    position = (player.get_position()[0][0]+(math.cos(radians)*0.4),player.get_position()[0][1]+(math.sin(radians)*0.4))
+    #print "init"
+    #print v_object_select
+    v_object_select[0] = position[0] * 3.125
+    v_object_select[1] = position[1] * 3.125
     #print tmp
     #90 top
-    if tmp > 0 and tmp < 45:
-        v_object_select[1] += 1
-        v_object_select[0] += 1
-        #print "right top"
-    if tmp > 45 and tmp < 90:
-        v_object_select[1] += 1
-        #print "top"
-    if tmp > 90 and tmp < 135:
-        v_object_select[1] += 1
-        v_object_select[0] -= 1
-        #print "left top"
-    if tmp > 135 and tmp < 180:
-        v_object_select[0] -= 1
-        #print "left"
-    if tmp > 180 and tmp < 225:
-        v_object_select[1] -= 1
-        v_object_select[0] -= 1
-        #print "left bottom"
-    if tmp > 225 and tmp < 270:
-        v_object_select[1] -= 1
-        #print "bottom"
-    if tmp > 270 and tmp < 315:
-        v_object_select[1] -= 1
-        v_object_select[0] += 1
-        #print "right bottom"
-    if tmp > 315 and tmp < 360:
-        v_object_select[0] += 1
-        #print "right"
+    #if tmp > 0 and tmp < 45:
+    #    v_object_select[1] += 1
+    #    v_object_select[0] += 1
+    #    #print "right top"
+    #if tmp > 45 and tmp < 90:
+    #    v_object_select[1] += 1
+    #    #print "top"
+    #if tmp > 90 and tmp < 135:
+    #    v_object_select[1] += 1
+    #    v_object_select[0] -= 1
+    #    #print "left top"
+    #if tmp > 135 and tmp < 180:
+    #    v_object_select[0] -= 1
+    #    #print "left"
+    #if tmp > 180 and tmp < 225:
+    #    v_object_select[1] -= 1
+    #    v_object_select[0] -= 1
+    #    #print "left bottom"
+    #if tmp > 225 and tmp < 270:
+    #    v_object_select[1] -= 1
+    #    #print "bottom"
+    #if tmp > 270 and tmp < 315:
+    #    v_object_select[1] -= 1
+    #    v_object_select[0] += 1
+    #    #print "right bottom"
+    #if tmp > 315 and tmp < 360:
+    #    v_object_select[0] += 1
+    #    #print "right"
 
 
 
