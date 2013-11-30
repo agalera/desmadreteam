@@ -1,0 +1,42 @@
+{
+    "files": [
+        {
+            "url": "assets/mapa.tmx",
+            "md5": "a5e93707fb5c3341b7b85b58c14f2b50",
+            "value": false
+        },
+        {
+            "url": "assets/player.png",
+            "md5": "a9c3c1246d7942eff39bf1545f4e9dc2",
+            "value": false
+        },
+        {
+            "url": "assets/stGrid1.png",
+            "md5": "d8842dc4c78d660c776b906cd21cbe31",
+            "value": false
+        },
+        {
+            "url": "assets/stGriddeco.png",
+            "md5": "d8842dc4c78d660c776b906cd21cbe31",
+            "value": false
+        },
+	    {
+            "url": "assets/test.wav",
+            "md5": "d8842dc4c78d660c776b906cd21cbe31",
+            "value": false
+        },
+        {
+            "url": "assets/bullet.png",
+            "md5": "c374a43b06b51e3cb1c132a243ecb3fd",
+            "value": false
+        },
+        {
+            "url": "start.exe",
+            "md5": "6d512573776ba9353c533bf616c3cfee",
+            "value": false
+        }
+    ],
+    "boolean": true,
+    "null": null,
+    "number": 1
+}

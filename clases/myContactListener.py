@@ -14,6 +14,7 @@ class myContactListener(b2ContactListener):
         if var.fixtureB.body.userData != None:
             if (var.fixtureB.body.position[1] > var.fixtureA.body.position[1]):
                 var.fixtureB.body.userData.touch(True)
+
             if var.fixtureB.body.bullet == True and var.fixtureB.body.userData.get_hook() == 1:
                 if var.fixtureB.body not in self.borrar:
                     if (self.player.set_other_body(var.fixtureA.body, var.fixtureB.body)):
@@ -23,10 +24,8 @@ class myContactListener(b2ContactListener):
             if (var.fixtureB.body.position[1] < var.fixtureA.body.position[1]):
                 var.fixtureA.body.userData.touch(True)
 
-
-
         #print "fixtureb: " + str(var.fixtureB.body)
-        #borrar.append(var.fixtureA.body)
+
 #        if (var.fixtureB.body.bullet == True):
 #            borrar.append(var.fixtureB.body)
         #if (var.fixtureB.body.bullet == True):
@@ -60,6 +59,9 @@ class myContactListener(b2ContactListener):
             if (var.fixtureB.body.userData != None):
                 var.fixtureB.body.userData.add_damage(var2.normalImpulses[0])
             # recv damage total
+        if var.fixtureB.body.bullet == True:
+            if var.fixtureB.body not in self.borrar:
+                self.borrar.append(var.fixtureB.body)
 
         #var.fixtureA.body #golpea
         #var.fixtureB.body #recibe

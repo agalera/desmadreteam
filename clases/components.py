@@ -16,18 +16,24 @@ class components:
 
     def touch(self, touch):
         self.masterclass.change_touch(touch)
+
     def get_main(self):
         return self.main
+
     def get_body(self):
         return self.main.body
+
     def add_damage(self, fl):
         print "recibo amor"
         print fl
         self.damage += fl
+
     def get_position(self):
         return [self.main.body.position, self.main.body.angle]
+
     def get_worldcenter(self):
         return self.main.body.worldCenter
+
     def draw(self, posible = False, angle = False):
         if (posible != False):
             texture_info_temp = [int(posible), 0];

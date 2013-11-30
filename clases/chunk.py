@@ -8,7 +8,7 @@ from Box2D import *
 import copy
 
 size_tile = 0.32
-class chunk: 
+class chunk:
     def __init__ (self, x,y, worlds):
         self.dynamics = []
         self.x = x
@@ -19,7 +19,7 @@ class chunk:
         self.chunkDisplayList = [glGenLists(1), glGenLists(2)]
         self.worlds = worlds
         self.load_map()
-    
+
     def pick_object(self, position): #deprecated
         try:
             x = int(position[0][0]*3.10)+1
@@ -56,7 +56,7 @@ class chunk:
             polydef = b2PolygonShape(vertices=[(size_tile/2,size_tile/2),(-size_tile/2,-size_tile/2),(size_tile/2,-size_tile/2)])
         else:
             polydef = b2PolygonShape(vertices=[(-size_tile/2,size_tile/2),(-size_tile/2,-size_tile/2),(size_tile/2,-size_tile/2)])
-            
+
 
         #print "3"+ str(polydef)
         self.worlds.CreateStaticBody(
@@ -81,6 +81,7 @@ class chunk:
             )
     def draw_static(self):
         glCallList(self.chunkDisplayList[0])
+    def draw_decoration(self):
         glCallList(self.chunkDisplayList[1])
 
     def draw_items(self, position):
@@ -106,7 +107,7 @@ class chunk:
 
     def load_map(self):
         #MatrixT = [[0 for x in xrange(30)] for x in xrange(400)]
-        
+
         import csv
         mapa = list(csv.reader(open('assets/mapa.tmx')))
         estado = 0
@@ -139,7 +140,7 @@ class chunk:
                 capa +=1
                 if (capa < 2):
                     glNewList(self.chunkDisplayList[capa], GL_COMPILE)
-                
+
                 estado = 1
             elif pepe[0] == '</data>':
                 if (capa < 2):
@@ -162,7 +163,7 @@ class chunk:
                     else:
                         y -=1
                         x = -1
-                        
+
         shape = []
         tmp_v = 0
         for taa in self.items:
@@ -173,17 +174,17 @@ class chunk:
             for x in range(self.total_x):
                 s_y = (self.total_y-1) - int(y)
                 tile = self.Matrix[0][x][y].get_tile()
-                if (tile == -1 or tile == 4 or tile == 5):
+                if (tile != -1):
                     if posible_shape[0][0] != -1 and posible_shape[0][0] != -1 and posible_shape[1][0] != -1 and posible_shape[1][1] != -1:
                         shape.append(posible_shape)
                     if posible_shape[0][0] != -1 and posible_shape[0][0] != -1 and posible_shape[1][0] == -1 and posible_shape[1][0] == -1:
                         posible_shape[1] = posible_shape[0]
                         shape.append(posible_shape)
                     posible_shape = [(-1,-1),(-1,-1)]
-                    if (tile == 4):
-                        self.create_colision_triangle((x,y),True)
-                    if (tile == 5):
-                        self.create_colision_triangle((x,y),False)
+                    #if (tile == 4):
+                    #    self.create_colision_triangle((x,y),True)
+                    #if (tile == 5):
+                    #    self.create_colision_triangle((x,y),False)
                 else:
                     if posible_shape[0][0] == -1 and posible_shape[0][1] == -1:
                         posible_shape[0] = (x,y)
@@ -193,7 +194,7 @@ class chunk:
                 tile = self.Matrix[3][x][y].get_tile()
                 if (tile != -1):
                 #    pass
-                    self.dynamics.append(asteroids(self.worlds.CreateDynamicBody(position=(x*size_tile,y*size_tile), angularDamping=1.0, linearDamping= 1.0), tile))
+                    self.dynamics.append(asteroids(self.worlds.CreateDynamicBody(position=(x*size_tile,y*size_tile), angularDamping=10.0, linearDamping= 10.0), tile))
         self.create_colision(shape)
 
     def create_tile(self,bx,by,tile):

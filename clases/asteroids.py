@@ -11,7 +11,8 @@ class asteroids:
         self.body.userData = self
         self.damage = 0.0
         self.tile = tile
-        self.body.CreatePolygonFixture(box=(size_tile*0.90,size_tile*0.90),density=1, friction= 1)
+        self.body.CreatePolygonFixture(box=(size_tile*0.90,size_tile*0.90),density=1, friction= 10)
+
     def get_body(self):
         return self.body
     def touch(self, touch):

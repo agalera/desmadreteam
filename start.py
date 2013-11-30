@@ -14,6 +14,7 @@ from clases.myDestructionListener import myDestructionListener
 from PIL.Image import open
 import sys
 from Box2D import *
+import pygame
 
 
 resolution = [1600,800]
@@ -153,7 +154,6 @@ def update():
     world.ClearForces()
     clear_objects(2)
 
-
     #joint_check()
     Lchunk[0].pick_object(player.get_position())
 
@@ -164,7 +164,7 @@ def initFun():
     glEnable(GL_AUTO_NORMAL)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     glEnable(GL_BLEND)
-    glClearColor(0.6,0.6,1.0,0.0)
+    glClearColor(0.0,0.0,0.0,0.0)
     #reshapeFun(resolution[0],resolution[1])
     ### load textures and initial chunk
     global textures
@@ -174,18 +174,30 @@ def initFun():
     textures.append(loadImage('assets/stGrid1.png'))
     textures.append(loadImage('assets/player.png'))
     textures.append(loadImage('assets/bullet.png'))
-
+    textures.append(loadImage('assets/stGriddeco.png'))
 
     player = player(bullet, joints, borrar)
     myListener = myContactListener(borrar, player)
     myDestructor = myDestructionListener()
     world=b2World(contactListener=myListener, destructorListener=myDestructor) # default gravity is (0,-10) and doSleep is True
-    world.gravity = (0, -30)
+    world.gravity = (0, 0)
     player.set_world(world)
     Lchunk.append(chunk(0,0, world))
     enable_vsync()
 
+    pygame.mixer.init()
+    music('a')
+def music(file):
+
+    pygame.mixer.music.load("assets/test.wav")
+    pygame.mixer.music.play()
+
+def sound(file):
+    sound = pygame.mixer.Sound("assets/test.wav")
+    sound.play()
+
 def reshapeFun(wi,he):
+    global resolution
     resolution = [wi,he]
     aspect = 1.9
     aspect = resolution[0] / resolution[1]
@@ -239,20 +251,24 @@ def RenderGLFun():
         animate = 0.0
     #---- End Experimental zone ----
     #Init Frame
-    glClearColor(0.6,0.6,1.0,0.0)
+    glClearColor(0.0,0.0,0.0,0.0)
     glClear(GL_COLOR_BUFFER_BIT)
     glLoadIdentity()
     create_camera()
 
     #draw time (optional)
+
     setupTexture(0)
     Lchunk[0].draw_static()
+    setupTexture(3)
+    Lchunk[0].draw_decoration()
+
     new_frame(True)
     Lchunk[0].draw_items(player.get_position())
     new_frame(False)
     Lchunk[0].draw_dynamics(player.get_position())
     setupTexture(1)
-    player.draw() #components.py:31 opengl
+    player.draw(radians) #components.py:31 opengl
     setupTexture(2)
     for taa in list(bullet):
         taa.draw()
@@ -287,7 +303,7 @@ if __name__ == '__main__':
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
     glutInitWindowSize(resolution[0],resolution[1])
-    glutCreateWindow("pplat")
+    glutCreateWindow("DesmadreTeam")
 
     #glutSpecialFunc(ControlFlechas)
 
@@ -300,6 +316,7 @@ if __name__ == '__main__':
     glutKeyboardFunc(ControlTeclado)
     glutKeyboardUpFunc(ControlTecladoUp)
     glutMouseFunc(ControlRaton)
+    glutPassiveMotionFunc(ControlRatonPos)
     glutMotionFunc(ControlRatonPos)
     initFun()
     glutMainLoop()

@@ -8,12 +8,14 @@ from components import components
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
+import pygame
+
 size_tile = 0.16
 class player:
     def __init__ (self, bullet,joints, borrar):
 
         #self.world = world
-        self.pos_init = [1.40,10.0]
+        self.pos_init = [20.00,4.0]
         #self.create_player()
         self.bullet = bullet
         self.borrar = borrar
@@ -25,11 +27,14 @@ class player:
         self.rope = None
         self.other_body = None
         self.relative_pos = None
+
     def change_touch(self, val=False):
         self.touch = val
+
     def set_world(self, world):
         self.world = world
         self.create_player()
+
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
         self.body = components(self.create_box(pos), self, 1)
@@ -70,7 +75,7 @@ class player:
         #self.rope.bodyB.position = self.absolute_pos
 
     def create_box(self, pos):
-        tmp = self.world.CreateDynamicBody(position=(pos),angularDamping=30.0, linearDamping= 0.0, angle= 0)
+        tmp = self.world.CreateDynamicBody(position=(pos),angularDamping=30.0, linearDamping= 20.0, angle= 0)
 
         return tmp.CreateCircleFixture(radius=(size_tile/1.2),density=1, friction= 6)
 
@@ -88,9 +93,9 @@ class player:
             self.other_body = None
         return self.body.get_position()
 
-    def draw(self):
+    def draw(self, radians):
         if (self.mode_normal == True):
-            self.body.draw(2, 0.00001)
+            self.body.draw(3)
         else:
             self.body.draw(3)
         #self.other_body.draw()
@@ -109,7 +114,7 @@ class player:
         glBegin(GL_LINES)
         glTexCoord2f(0.0,1.0)
         glVertex3f(obja[0], obja[1], 0.0)
-        glTexCoord2f(1.0, 0.0)
+        glTexCoord2f(0.0, 1.0)
         glVertex3f(objb[0], objb[1], 0.0)
         glEnd()
 
@@ -119,59 +124,75 @@ class player:
 
     def move(self,wasd, t_delta, radians):
         body_tmp = self.body.get_body()
+        body_tmp.angle = radians
         if (self.block_fire >= 0):
             self.block_fire -= t_delta
-        if (wasd[4] == 1):
-            self.body.get_body().position = [1.40,4.0]
+        #if (wasd[4] == 1):
+        #    self.body.get_body().position = [1.40,4.0]
 
-        if (wasd[0] == 1):
-            if (self.rope != None):
-                self.rope.length -= t_delta/1000
-            else:
-                if self.touch == True:
-                    self.touch = False
-                    body_tmp.ApplyLinearImpulse(b2Vec2(0,0.6), b2Vec2(body_tmp.position[0],2-body_tmp.position[1]),1)
-        if (self.mode_normal == True):
-            if (wasd[1] == 1):
-                if (body_tmp.linearVelocity[0]> -10):
-                    if self.touch == True:
-                        body_tmp.ApplyLinearImpulse(b2Vec2(-0.004*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-                    else:
-                        body_tmp.ApplyLinearImpulse(b2Vec2(-0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-                    body_tmp.ApplyTorque(0.4,1)
-            if (wasd[3] == 1):
-                if (body_tmp.linearVelocity[0]< 10):
-                    if self.touch == True:
-                        body_tmp.ApplyLinearImpulse(b2Vec2(0.004*t_delta,0.0000000), b2Vec2(2-body_tmp.position[0],body_tmp.position[1]),1)
-                    else:
-                        body_tmp.ApplyLinearImpulse(b2Vec2(0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-                    body_tmp.ApplyTorque(-0.4,1)
+        #if (wasd[0] == 1):
+        #    if (self.rope != None):
+        #        self.rope.length -= t_delta/1000
+        #    else:
+        #        if self.touch == True:
+        #            self.touch = False
+        #            body_tmp.ApplyLinearImpulse(b2Vec2(0,0.6), b2Vec2(body_tmp.position[0],2-body_tmp.position[1]),1)
+        #if (self.mode_normal == True):
+        #    if (wasd[1] == 1):
+        #        if (body_tmp.linearVelocity[0]> -10):
+        #            if self.touch == True:
+        #                body_tmp.ApplyLinearImpulse(b2Vec2(-0.004*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
+        #            else:
+        #                body_tmp.ApplyLinearImpulse(b2Vec2(-0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
+        #            body_tmp.ApplyTorque(0.4,1)
+        #    if (wasd[3] == 1):
+        #        if (body_tmp.linearVelocity[0]< 10):
+        #            if self.touch == True:
+        #                body_tmp.ApplyLinearImpulse(b2Vec2(0.004*t_delta,0.0000000), b2Vec2(2-body_tmp.position[0],body_tmp.position[1]),1)
+        #            else:
+        #                body_tmp.ApplyLinearImpulse(b2Vec2(0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
+        #            body_tmp.ApplyTorque(-0.4,1)
+        #
+        #else:
+        #    if (wasd[1] == 1):
+        #        if (body_tmp.linearVelocity[0]> -1):
+        #            body_tmp.ApplyLinearImpulse(b2Vec2(-0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
+        #        body_tmp.ApplyTorque(2,1)
+        #    if (wasd[3] == 1):
+        #        if (body_tmp.linearVelocity[0]< 1):
+        #            body_tmp.ApplyLinearImpulse(b2Vec2(0.001*t_delta,0.0000000), b2Vec2(2-body_tmp.position[0],body_tmp.position[1]),1)
+        #        body_tmp.ApplyTorque(-2,1)
 
-        else:
-            if (wasd[1] == 1):
-                if (body_tmp.linearVelocity[0]> -1):
-                    body_tmp.ApplyLinearImpulse(b2Vec2(-0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-                body_tmp.ApplyTorque(2,1)
-            if (wasd[3] == 1):
-                if (body_tmp.linearVelocity[0]< 1):
-                    body_tmp.ApplyLinearImpulse(b2Vec2(0.001*t_delta,0.0000000), b2Vec2(2-body_tmp.position[0],body_tmp.position[1]),1)
-                body_tmp.ApplyTorque(-2,1)
+        #if (wasd[2] == 1  and self.block_fire < 0):
+        #    if (self.rope != None):
+        #        self.rope.length += t_delta/1000
+        #    else:
+        #        self.change_mode()
+        #        self.block_fire = 240.0
 
-        if (wasd[2] == 1  and self.block_fire < 0):
-            if (self.rope != None):
-                self.rope.length += t_delta/1000
-            else:
-                self.change_mode()
-                self.block_fire = 240.0
         if(wasd[5][0] == 1 and self.block_fire < 0):
+            sound = pygame.mixer.Sound("assets/test.wav")
+            sound.play()
+
             self.block_fire = 240.0
             self.bullet.append(disparos(self.world.CreateDynamicBody(
-                position=(body_tmp.position[0]+(math.cos(radians)*0.4),body_tmp.position[1]+(math.sin(radians)*0.4)),
-                bullet=True,angle = body_tmp.angle,  angularDamping=5.0, linearDamping= 1.0,
-                fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/1.4)), density=50.0),
+                position=(body_tmp.position[0]+(math.cos(radians)*0.3),body_tmp.position[1]+(math.sin(radians)*0.3)),
+                bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 0.0,
+                fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/1.4)), density=0.5),
                 linearVelocity=(30*math.cos(radians), 30*math.sin(radians))), 0)
             )
-        if(wasd[5][2] == 1 and self.hook_status == 0):
+        if(wasd[0] == 1):
+            body_tmp.ApplyLinearImpulse(b2Vec2(0.0,0.0015*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)
+        if(wasd[1] == 1):
+            body_tmp.ApplyLinearImpulse(b2Vec2(-0.0015*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
+        if(wasd[2] == 1):
+            body_tmp.ApplyLinearImpulse(b2Vec2(0.0,-0.0015*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)
+        if(wasd[3] == 1):
+            body_tmp.ApplyLinearImpulse(b2Vec2(0.0015*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
+        #if(wasd[5][0] == 1):
+        #    body_tmp.ApplyLinearImpulse(b2Vec2(0.004*t_delta*math.cos(radians), 0.004*t_delta*math.sin(radians)), b2Vec2(body_tmp.position[0],body_tmp.position[1]),1)
+
+        if(wasd[4] == 1 and self.hook_status == 0):
             self.hook_status = 1
             #self.create_rope(1)
             tmp = disparos(self.world.CreateDynamicBody(
@@ -183,7 +204,7 @@ class player:
             #print tmp.get_body()
             self.create_rope(tmp.get_body(), tmp.get_body().position, 4.0)
 
-        if(wasd[5][2] == 0 and self.hook_status == 1):
+        if(wasd[4] == 0 and self.hook_status == 1):
             self.hook_status = 0
             self.destroy_rope()
             for taa in list(self.bullet):
