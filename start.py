@@ -240,6 +240,7 @@ def initFun():
     textures.append(loadImage('assets/player.png'))
     textures.append(loadImage('assets/bullet.png'))
     textures.append(loadImage('assets/stGriddeco.png'))
+    textures.append(loadImage('assets/icons.png'))
 
     player = player(bullet, joints, borrar)
     myListener = myContactListener(borrar, player)
@@ -344,20 +345,27 @@ def RenderGLFun():
     glPushMatrix()
     glLoadIdentity()
     draw_caretos()
-    draw_kill()
+    setupTexture(4)
+    draw_kills()
     glPopMatrix()
     #draw_select()
     #go to gpu
     glutSwapBuffers()
-    
-def draw_kill():
 
-    tile = last_kill[0]
+def draw_kills():
+    draw_kill(1)
+    draw_kill(2)
+    draw_kill(3)
+    draw_kill(4)
+
+def draw_kill(bxs):
+
+    tile = total_kills / bxs
     size_tile = 0.32
     #v_object_select = player.get_position()[0]
     #print v_object_select
-    bx = -2.8
-    by = -2.8
+    bx = bxs
+    by = -2.7
 
     texture_info_temp = [int(tile), 0];
     textureXOffset = float(texture_info_temp[0]/16.0)+0.001
