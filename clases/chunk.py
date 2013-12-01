@@ -24,6 +24,7 @@ class chunk:
         x = int(position[0])
         y = int(position[1])
         return self.Matrix[2][x][y].get_tile()
+
     def pick_object(self, position): #deprecated
         try:
             x = int(position[0])

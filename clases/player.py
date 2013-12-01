@@ -8,12 +8,12 @@ from components import components
 from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
-import pygame
+import clases.audio
 
 size_tile = 0.16
+
 class player:
     def __init__ (self, bullet,joints, borrar):
-
         #self.world = world
         self.pos_init = [20.0,1.0]
         #self.create_player()
@@ -34,10 +34,11 @@ class player:
     def set_world(self, world):
         self.world = world
         self.create_player()
-
+    def add_damage(self, damage):
+        pass
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
-        self.body = components(self.create_box(pos), self, 1)
+        self.body = components(self.create_box(pos), self, 1, self.world)
         #
     def set_other_body(self, var, var2):
 
@@ -93,11 +94,14 @@ class player:
             self.other_body = None
         return self.body.get_position()
 
-    def draw(self, radians):
+    def draw(self, radians, animate, wasd):
         if (self.mode_normal == True):
-            self.body.draw(3)
-        else:
-            self.body.draw(3)
+
+            if (wasd[0] == False and wasd[1] == False and wasd[2] == False and wasd[3] == False):
+                self.body.draw(int(animate / 8))
+            else:
+                self.body.draw(int(animate / 8)+2)
+
         #self.other_body.draw()
         if self.rope != None:
             self.draw_line(self.rope.bodyA.position,[self.rope.bodyB.position[0] + self.rope.userData[0], self.rope.bodyB.position[1] + self.rope.userData[1]])
@@ -170,14 +174,17 @@ class player:
         #        self.change_mode()
         #        self.block_fire = 240.0
 
-        if(wasd[5][0] == 1 and self.block_fire < 0):
-            self.block_fire = 240.0
+        if(wasd[5][0] == 1 and self.block_fire < 0.0):
+            clases.audio.efectSound(15)
+            self.block_fire = 10.0
             self.bullet.append(disparos(self.world.CreateDynamicBody(
                 position=(body_tmp.position[0]+(math.cos(radians)*0.3),body_tmp.position[1]+(math.sin(radians)*0.3)),
-                bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 0.0,
-                fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/1.4)), density=0.5),
-                linearVelocity=(30*math.cos(radians), 30*math.sin(radians))), 0)
+                bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
+                fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=60),
+                linearVelocity=(50*math.cos(radians), 50*math.sin(radians))), 0)
             )
+
+
         if(wasd[0] == 1):
             body_tmp.ApplyLinearImpulse(b2Vec2(0.0,0.0015*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)
         if(wasd[1] == 1):
@@ -195,7 +202,7 @@ class player:
             tmp = disparos(self.world.CreateDynamicBody(
                             position=(body_tmp.position[0]+(math.cos(radians)*0.4),body_tmp.position[1]+(math.sin(radians)*0.4)),
                             bullet=True,angle = body_tmp.angle,  angularDamping=5.0, linearDamping= 1.0,
-                            fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/100)), density=10.0),
+                            fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/1.4)), density=0.1),
                             linearVelocity=(30*math.cos(radians), 30*math.sin(radians))), 1)
             self.bullet.append(tmp)
             #print tmp.get_body()

@@ -6,6 +6,8 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import math
 from clases.player import player
+from clases.tren import tren
+from clases.civil import civil
 from clases.chunk import chunk
 from clases.disparos import disparos
 from clases.asteroids import asteroids
@@ -14,8 +16,7 @@ from clases.myDestructionListener import myDestructionListener
 from PIL.Image import open
 import sys
 from Box2D import *
-import pygame
-
+import clases.audio
 
 resolution = [1600,800]
 radians = 0
@@ -73,7 +74,7 @@ def create_camera():
     glRotate(0, 1, 0, 0)
     glRotate(0, 0, 0, 1)
     camera = player.get_position()[0]
-    glTranslatef( -camera[0] , -camera[1], 0);
+    glTranslate( -camera[0] , -camera[1], 0)
 
 def ControlRatonPos(x,y):
     global radians
@@ -104,19 +105,18 @@ def ControlTeclado(key,x,y):
     if (key == "d"):
         wasd[3] = 1
     if (key == "q"):
-        print [int(v_object_select[0]),int(v_object_select[1])]
-
+        print int(v_object_select[0]),int(v_object_select[1])
         wasd[4] = 1
 
 def object_select():
-    #v_object_select[0] = int((player.get_position()[0][0]+0.16) * 3.125)
-    #v_object_select[1] = int((player.get_position()[0][1]+0.16) * 3.125)
+    v_object_select[0] = int((player.get_position()[0][0]+0.16) * 3.125)
+    v_object_select[1] = int((player.get_position()[0][1]+0.16) * 3.125)
     #tmp = math.degrees(radians)
-    position = (player.get_position()[0][0]+(math.cos(radians)*0.5),player.get_position()[0][1]+(math.sin(radians)*0.5))
+    #position = (player.get_position()[0][0]+(math.cos(radians)*0.5),player.get_position()[0][1]+(math.sin(radians)*0.5))
     #print "init"
     #print v_object_select
-    v_object_select[0] = int((position[0]+0.16) * 3.125)
-    v_object_select[1] = int((position[1]+0.16) * 3.125)
+    #v_object_select[0] = int((position[0]+0.16) * 3.125)
+    #v_object_select[1] = int((position[1]+0.16) * 3.125)
     #print tmp
     #90 top
     #if tmp > 0 and tmp < 45:
@@ -169,12 +169,11 @@ def clear_objects(var):
             borrar.remove(taa)
             world.DestroyBody(taa)
             bullet.remove(taa.userData)
-
     else:
 
         #clear fire idle
         for taa in list(bullet):
-            if taa.awake() == False or taa.get_position()[0][1] < 0:
+            if taa.awake() == False:
                 print "awake: "+ str(taa.awake())
                 print "pos" +str(taa.get_position()[0][1])
                 world.DestroyBody(taa.get_body())
@@ -199,8 +198,12 @@ def update():
     object_select()
     #joint_check()
     #draw posible options
-    draw_posible_options()
-
+    #draw_posible_options()
+    Lchunk[0].pick_object(v_object_select)
+    #print trenecito.get_position
+    if (int(trenecito.get_position()[0][1]) == 5):
+        if (len(civiles) < 20):
+            generar_civiles()
     player.move(wasd, t_delta, radians)
 
 def draw_posible_options():
@@ -218,6 +221,21 @@ def initFun():
     global Lchunk
     global player
     global world
+    global civiles
+    global civiles_muertos
+    global civiles_muertos_DL
+    global total_kills
+    global last_kill
+    global trenecito
+
+    last_kill = [-1,-1]
+
+    total_kills = 0
+    civiles_muertos_DL = glGenLists(9)
+    civiles = []
+    civiles_muertos = []
+    clases.audio.stationMusic(0)
+
     textures.append(loadImage('assets/stGrid1.png'))
     textures.append(loadImage('assets/player.png'))
     textures.append(loadImage('assets/bullet.png'))
@@ -229,19 +247,17 @@ def initFun():
     world=b2World(contactListener=myListener, destructorListener=myDestructor) # default gravity is (0,-10) and doSleep is True
     world.gravity = (0, 0)
     player.set_world(world)
+    trenecito = tren([115,29], world, bullet)
     Lchunk.append(chunk(0,0, world))
     enable_vsync()
 
-    pygame.mixer.init()
-    music('a')
-def music(file):
 
-    pygame.mixer.music.load("assets/test.wav")
-    pygame.mixer.music.play()
+def generar_civiles():
+    #pass
+    for i in range(8):
+        tmp = i * 16
+        civiles.append(civil([20,2],world, tmp, player, bullet))
 
-def sound(file):
-    sound = pygame.mixer.Sound("assets/test.wav")
-    sound.play()
 
 def reshapeFun(wi,he):
     global resolution
@@ -281,10 +297,10 @@ def new_frame(init):
     if init == True:
         glMatrixMode(GL_TEXTURE)
         glPushMatrix()
-        glLoadIdentity()
+
         glTranslatef(0.0625*int(animate),0.0,0.0)
     else:
-        glMatrixMode(GL_TEXTURE)
+        #glMatrixMode(GL_TEXTURE)
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
 
@@ -293,9 +309,10 @@ def RenderGLFun():
     update()
     #---- Init Experimental zone ----
     global animate
-    animate +=t_delta/60
-    if animate < 16:
+    animate +=float(t_delta)/60.0
+    if animate > 16:
         animate = 0.0
+
     #---- End Experimental zone ----
     #Init Frame
     glClearColor(0.0,0.0,0.0,0.0)
@@ -315,13 +332,110 @@ def RenderGLFun():
     new_frame(False)
     Lchunk[0].draw_dynamics(player.get_position())
     setupTexture(1)
-    player.draw(radians) #components.py:31 opengl
+    draw_civils()
+    player.draw(radians, animate, wasd) #components.py:31 opengl
     setupTexture(2)
     for taa in list(bullet):
         taa.draw()
-    draw_select()
+    trenecito.draw(t_delta)
+    #GUI
+    #
+    setupTexture(1)
+    glPushMatrix()
+    glLoadIdentity()
+    draw_caretos()
+    draw_kill()
+    glPopMatrix()
+    #draw_select()
     #go to gpu
     glutSwapBuffers()
+    
+def draw_kill():
+
+    tile = last_kill[0]
+    size_tile = 0.32
+    #v_object_select = player.get_position()[0]
+    #print v_object_select
+    bx = -2.8
+    by = -2.8
+
+    texture_info_temp = [int(tile), 0];
+    textureXOffset = float(texture_info_temp[0]/16.0)+0.001
+    textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
+    textureHeight  = float(0.060)
+    textureWidth   = float(0.060)
+    glTranslatef(bx,by, 0)
+    glBegin(GL_QUADS)
+    glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+    glVertex3f(-0.2, -0.2, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+    glVertex3f(+0.2, -0.2, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+    glVertex3f(+0.2, +0.2, 0)
+
+    glTexCoord2f(textureXOffset,textureYOffset)
+    glVertex3f(-0.2, + 0.2, 0)
+
+    glEnd()
+    glTranslatef(-bx,-by, 0)
+
+def draw_caretos():
+
+    tile = last_kill[0]
+    size_tile = 0.32
+    #v_object_select = player.get_position()[0]
+    #print v_object_select
+    bx = -2.8
+    by = -2.8
+
+    texture_info_temp = [int(tile), 0];
+    textureXOffset = float(texture_info_temp[0]/16.0)+0.001
+    textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
+    textureHeight  = float(0.060)
+    textureWidth   = float(0.060)
+    glTranslatef(bx,by, 0)
+    glBegin(GL_QUADS)
+    glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+    glVertex3f(-0.2, -0.2, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+    glVertex3f(+0.2, -0.2, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+    glVertex3f(+0.2, +0.2, 0)
+
+    glTexCoord2f(textureXOffset,textureYOffset)
+    glVertex3f(-0.2, + 0.2, 0)
+
+    glEnd()
+    glTranslatef(-bx,-by, 0)
+def draw_civils():
+    tmp = False
+    glCallList(civiles_muertos_DL)
+    for taa in list(civiles):
+        if (taa.get_normal() == True):
+            taa.draw(t_delta, animate)
+        else:
+            tmp = True
+            global total_kills
+            global last_kill
+            total_kills += 1
+            print "total kills: " + str(total_kills)
+            last_kill[0] = taa.get_tileid()+14
+            last_kill[1] = 0
+            civiles_muertos.append(taa)
+            civiles.remove(taa)
+    if (tmp == True):
+        glNewList(civiles_muertos_DL, GL_COMPILE)
+        for taa in list(civiles_muertos):
+            setupTexture(3)
+            taa.draw_sangre()
+            setupTexture(1)
+            taa.draw(0,animate)
+        glEndList()
+
 
 def draw_select():
     tile = 2
@@ -351,6 +465,7 @@ def draw_select():
     glVertex3f(bx-(size_tile/2),by+(size_tile/2), 0)
 
     glEnd()
+
 def getDelta():
     global lastFrame
     #time = 7.000.000
@@ -384,7 +499,7 @@ if __name__ == '__main__':
 
     #glutSpecialUpFunc(ControlFlechasUp)
     #glutTimerFunc(16,update, 1)
-    #glutTimerFunc(1000,clear_objects, 1)
+    glutTimerFunc(1000,clear_objects, 1)
     glutDisplayFunc(RenderGLFun)
     glutIdleFunc(RenderGLFun)
     glutReshapeFunc(reshapeFun)

@@ -26,6 +26,11 @@
             "value": false
         },
         {
+            "url": "assets/gun_shoot_metal.wav",
+            "md5": "d8842dc4c78d660c776b906cd21cbe31",
+            "value": false
+        },
+        {
             "url": "assets/bullet.png",
             "md5": "c374a43b06b51e3cb1c132a243ecb3fd",
             "value": false

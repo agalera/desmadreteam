@@ -51,17 +51,29 @@ class myContactListener(b2ContactListener):
         #for taa in var.manifold.points:
         #    print var.manifold.localPoint
         #radians = math.degrees(math.atan2(var.manifold.localPoint[0], var.manifold.localPoint[1]))+ 90.0
+#        print var.fixtureA.body.userData
+       # if var.fixtureB.body.bullet == True:
+       #     if (var.fixtureA.body.userData != None):
+       #         var.fixtureA.body.userData.add_damage(var2.normalImpulses[0] / 2)
 
-        if (var2.normalImpulses[0] > 20):
+#        if (var2.normalImpulses[0] > 1.0):
+#            print "pepe"
+#            if (var.fixtureA.body.userData != None):
+#                var.fixtureA.body.userData.add_damage(var2.normalImpulses[0] / 2)
+#            ##pass # recv damage /  2
+#            #if (var.fixtureB.body.userData != None):
+#            #    var.fixtureB.body.userData.add_damage(var2.normalImpulses[0])
+#            # recv damage total
+        if var.fixtureB.body.bullet == True:
             if (var.fixtureA.body.userData != None):
                 var.fixtureA.body.userData.add_damage(var2.normalImpulses[0] / 2)
-            #pass # recv damage /  2
-            if (var.fixtureB.body.userData != None):
-                var.fixtureB.body.userData.add_damage(var2.normalImpulses[0])
-            # recv damage total
-        if var.fixtureB.body.bullet == True:
             if var.fixtureB.body not in self.borrar:
                 self.borrar.append(var.fixtureB.body)
+        if var.fixtureA.body.bullet == True:
+            if (var.fixtureB.body.userData != None):
+                var.fixtureB.body.userData.add_damage(var2.normalImpulses[0] / 2)
+            if var.fixtureA.body not in self.borrar:
+                self.borrar.append(var.fixtureA.body)
 
         #var.fixtureA.body #golpea
         #var.fixtureB.body #recibe
