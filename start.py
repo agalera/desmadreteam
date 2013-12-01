@@ -271,7 +271,6 @@ def reshapeFun(wi,he):
     glLoadIdentity()
     if (aspect >= 1.0):
         print wi, he
-        print aspect
         glOrtho(-zoom * aspect, zoom * aspect, -zoom, zoom, -zoom, zoom)
     else:
         print "wtf"
@@ -353,19 +352,24 @@ def RenderGLFun():
     glutSwapBuffers()
 
 def draw_kills():
-    draw_kill(1)
-    draw_kill(2)
-    draw_kill(3)
-    draw_kill(4)
+    tmp = str(total_kills)
+    tmp_len = len(tmp)
+    if(tmp_len != 4):
+        for a in range(4-tmp_len):
+            tmp =  "0" + str(tmp)
+    draw_kill(0.2, tmp[3])
+    draw_kill(0.6, tmp[2])
+    draw_kill(1.0, tmp[1])
+    draw_kill(1.4, tmp[0])
+    
+def draw_kill(bxs,numerito):
 
-def draw_kill(bxs):
-
-    tile = total_kills / bxs
-    size_tile = 0.32
+    tile = int(numerito)+14
+    size_tile = 0.16
     #v_object_select = player.get_position()[0]
     #print v_object_select
-    bx = bxs
-    by = -2.7
+    bx = zoom - bxs
+    by = -zoom+0.3
 
     texture_info_temp = [int(tile), 0];
     textureXOffset = float(texture_info_temp[0]/16.0)+0.001
@@ -395,8 +399,8 @@ def draw_caretos():
     size_tile = 0.32
     #v_object_select = player.get_position()[0]
     #print v_object_select
-    bx = -2.8
-    by = -2.8
+    bx = -zoom+0.2
+    by = -zoom+0.2
 
     texture_info_temp = [int(tile), 0];
     textureXOffset = float(texture_info_temp[0]/16.0)+0.001
