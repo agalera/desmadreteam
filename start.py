@@ -37,7 +37,7 @@ borrar = []
 textures = []
 bullet = []
 joints = []
-
+status_global = 0
 zoom = 3.0
 
 
@@ -258,19 +258,7 @@ def initFun():
     trenecito = tren([115,29], world, bullet)
     Lchunk.append(chunk(0,0, world))
     enable_vsync()
-    reshapeFun(resolution[0], resolution[1])
-    for i in range(2):
-        glClearColor(0.0,0.0,0.0,0.0)
-        glClear(GL_COLOR_BUFFER_BIT)
-        glLoadIdentity()
-        glPushMatrix()
-        glLoadIdentity()
-        draw_pantallazo(6)
-        glPopMatrix()
-        glutSwapBuffers()
-    time.sleep(5)
-
-
+    getDelta()
 
 def draw_pantallazo(num):
     setupTexture(num)
@@ -303,7 +291,7 @@ def draw_pantallazo(num):
 
 def generar_civiles():
     for i in range(8):
-        civiles.append(civil([18,8],world, i * 16, player, bullet))
+        civiles.append(civil([18,7],world, i * 16, player, bullet))
 
 
 def reshapeFun(wi,he):
@@ -351,54 +339,73 @@ def new_frame(init):
         glMatrixMode(GL_MODELVIEW)
 
 def RenderGLFun():
-    update()
-    #---- Init Experimental zone ----
-    global animate
-    animate +=float(t_delta)/60.0
-    if animate > 16:
-        animate = 0.0
+    global status_global
+    if status_global == 0 or status_global == 3:
+        getDelta()
+        glClearColor(0.0,0.0,0.0,0.0)
+        glClear(GL_COLOR_BUFFER_BIT)
+        glLoadIdentity()
+        glPushMatrix()
+        glLoadIdentity()
+        if status_global == 0:
+            draw_pantallazo(6)
+        else:
+            draw_pantallazo(7)
+        glPopMatrix()
+        glutSwapBuffers()
+        if (wasd[0] == True):
 
-    #---- End Experimental zone ----
-    #Init Frame
-    glClearColor(0.0,0.0,0.0,0.0)
-    glClear(GL_COLOR_BUFFER_BIT)
-    glLoadIdentity()
-    create_camera()
-    #draw time (optional)
+            status_global = 1
+    #pepito
+    elif status_global == 1:
+        update()
+        #---- Init Experimental zone ----
+        global animate
+        animate +=float(t_delta)/60.0
+        if animate > 16:
+            animate = 0.0
 
-    setupTexture(0)
-    Lchunk[0].draw_static()
-    setupTexture(3)
-    Lchunk[0].draw_decoration()
+        #---- End Experimental zone ----
+        #Init Frame
+        glClearColor(0.0,0.0,0.0,0.0)
+        glClear(GL_COLOR_BUFFER_BIT)
+        glLoadIdentity()
+        create_camera()
+        #draw time (optional)
 
-    new_frame(True)
-    Lchunk[0].draw_items(player.get_position())
-    new_frame(False)
-    Lchunk[0].draw_dynamics(player.get_position())
-    setupTexture(1)
-    draw_civils()
-    player.draw(radians, animate, wasd) #components.py:31 opengl
-    setupTexture(2)
-    for taa in list(bullet):
-        taa.draw()
-    setupTexture(5)
-    trenecito.draw(t_delta)
-    #GUI
-    #
-    setupTexture(1)
-    glPushMatrix()
-    glLoadIdentity()
+        setupTexture(0)
+        Lchunk[0].draw_static()
+        setupTexture(3)
+        Lchunk[0].draw_decoration()
 
-    draw_caretos()
-    setupTexture(4)
-    draw_kills()
-    setupTexture(3)
-    draw_heals()
-    draw_frases()
-    glPopMatrix()
-    #draw_select()
-    #go to gpu
-    glutSwapBuffers()
+        new_frame(True)
+        Lchunk[0].draw_items(player.get_position())
+        new_frame(False)
+        Lchunk[0].draw_dynamics(player.get_position())
+        setupTexture(1)
+        draw_civils()
+        player.draw(radians, animate, wasd) #components.py:31 opengl
+        setupTexture(2)
+        for taa in list(bullet):
+            taa.draw()
+        setupTexture(5)
+        trenecito.draw(t_delta)
+        #GUI
+        #
+        setupTexture(1)
+        glPushMatrix()
+        glLoadIdentity()
+
+        draw_caretos()
+        setupTexture(4)
+        draw_kills()
+        setupTexture(3)
+        draw_heals()
+        draw_frases()
+        glPopMatrix()
+        #draw_select()
+        #go to gpu
+        glutSwapBuffers()
 
 def draw_frases():
     #64 frases
@@ -436,7 +443,8 @@ def draw_heals():
             tmp += 0.2
             draw_heal(tmp)
     else:
-        draw_pantallazo(7)
+        global status_global
+        status_global = 3
 def draw_heal(bxs):
 
     tile = 82
@@ -618,7 +626,6 @@ def updateFPS():
         #print last_time
 
 if __name__ == '__main__':
-    getDelta()
     glutInit()
     glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB)
     glutInitWindowSize(resolution[0],resolution[1])
