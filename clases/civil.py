@@ -71,31 +71,25 @@ class civil:
         if (self.mode_normal == False and self.body.get_vivo() == True):
             self.body.set_vivo()
             self.body.destruyeme()
-        else:
-            try:
-                if (self.block_fire >= 0):
-                    self.block_fire -= t_delta
-                body_tmp = self.body.get_body()
-                pasive_position = self.player.get_position()
-                if (self.tileid == 16):
-                    speed = (1.0-self.damage)*0.0015
-                    body_tmp.angle = -(math.atan2(pasive_position[0][0]-body_tmp.position[0], pasive_position[0][1]-body_tmp.position[1]))+1.57
-
-                    body_tmp.ApplyLinearImpulse(b2Vec2(speed*t_delta*math.cos(body_tmp.angle), speed*t_delta*math.sin(body_tmp.angle)), b2Vec2(body_tmp.position[0],body_tmp.position[1]),1)
-                    self.open_fire(body_tmp)
-                else:
-                    speed = (1.0-self.damage)*0.003
-                    #body_tmp.angle = -(math.atan2(pasive_position[0][0]-body_tmp.position[0], pasive_position[0][1]-body_tmp.position[1]))-1.57
-                    body_tmp.ApplyTorque(randint(-40,40)/10,1)
-                    body_tmp.ApplyLinearImpulse(b2Vec2(speed*t_delta*math.cos(body_tmp.angle), speed*t_delta*math.sin(body_tmp.angle)), b2Vec2(body_tmp.position[0],body_tmp.position[1]),1)
-
-            except:
-                pass
-
-        if (self.mode_normal == True):
-            self.body.draw(self.tileid+2+int(animate / 8))
-        else:
+        if (self.mode_normal == False and self.body.get_vivo() == False):
             self.body.draw(self.tileid+15)
+        else:
+            if (self.block_fire >= 0):
+                self.block_fire -= t_delta
+            body_tmp = self.body.get_body()
+            pasive_position = self.player.get_position()
+            if (self.tileid == 16):
+                speed = (1.0-self.damage)*0.0015
+                body_tmp.angle = -(math.atan2(pasive_position[0][0]-body_tmp.position[0], pasive_position[0][1]-body_tmp.position[1]))+1.57
+
+                body_tmp.ApplyLinearImpulse(b2Vec2(speed*t_delta*math.cos(body_tmp.angle), speed*t_delta*math.sin(body_tmp.angle)), b2Vec2(body_tmp.position[0],body_tmp.position[1]),1)
+                self.open_fire(body_tmp)
+            else:
+                speed = (1.0-self.damage)*0.003
+                #body_tmp.angle = -(math.atan2(pasive_position[0][0]-body_tmp.position[0], pasive_position[0][1]-body_tmp.position[1]))-1.57
+                body_tmp.ApplyTorque(randint(-40,40)/10,1)
+                body_tmp.ApplyLinearImpulse(b2Vec2(speed*t_delta*math.cos(body_tmp.angle), speed*t_delta*math.sin(body_tmp.angle)), b2Vec2(body_tmp.position[0],body_tmp.position[1]),1)
+            self.body.draw(self.tileid+2+int(animate / 8))
 
     def change_mode(self):
         self.mode_normal = not self.mode_normal
