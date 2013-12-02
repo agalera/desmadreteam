@@ -28,11 +28,12 @@ class civil:
         self.world = world
         self.create_player()
         self.damage = 0.0
-        self.block_fire = 8000
+        self.block_fire = 2000
 
     def add_damage(self, damages):
         self.damage += damages
-        print "damage: " + str(damages)
+        #print "damage: " + str(damages)
+        clases.audio.efectSound(randint(16,24))
         if (self.damage > 1 and self.mode_normal == True):
             self.change_mode()
 
@@ -58,7 +59,7 @@ class civil:
     def open_fire(self, body_tmp):
         if(self.block_fire < 0.0):
             self.block_fire = 1600.0
-            clases.audio.efectSound(15)
+            clases.audio.efectSound(26)
             self.bullet.append(disparos(self.world.CreateDynamicBody(
                 position=(body_tmp.position[0]+(math.cos(body_tmp.angle)*0.3),body_tmp.position[1]+(math.sin(body_tmp.angle)*0.3)),
                 bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,

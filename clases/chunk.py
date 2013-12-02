@@ -38,7 +38,7 @@ class chunk:
                         self.items[xp].remove(taa)
 
                 self.regenerate_items(xp)
-                return tile
+                return str(tile)
             else:
                 return False
         except:

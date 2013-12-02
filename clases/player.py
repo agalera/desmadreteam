@@ -27,7 +27,7 @@ class player:
         self.rope = None
         self.other_body = None
         self.relative_pos = None
-
+        self.damage = 6.0
     def change_touch(self, val=False):
         self.touch = val
 
@@ -35,7 +35,13 @@ class player:
         self.world = world
         self.create_player()
     def add_damage(self, damage):
-        pass
+        self.damage -= damage
+    def add_hp(self, hp):
+        self.damage += hp
+
+    def get_damage(self):
+        return self.damage
+
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
         self.body = components(self.create_box(pos), self, 1, self.world)
@@ -176,9 +182,9 @@ class player:
 
         if(wasd[5][0] == 1 and self.block_fire < 0.0):
             clases.audio.efectSound(15)
-            self.block_fire = 10.0
+            self.block_fire = 150.0
             self.bullet.append(disparos(self.world.CreateDynamicBody(
-                position=(body_tmp.position[0]+(math.cos(radians)*0.3),body_tmp.position[1]+(math.sin(radians)*0.3)),
+                position=(body_tmp.position[0]+(math.cos(radians)*0.22),body_tmp.position[1]+(math.sin(radians)*0.22)),
                 bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
                 fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=60),
                 linearVelocity=(50*math.cos(radians), 50*math.sin(radians))), 0)
@@ -196,23 +202,23 @@ class player:
         #if(wasd[5][0] == 1):
         #    body_tmp.ApplyLinearImpulse(b2Vec2(0.004*t_delta*math.cos(radians), 0.004*t_delta*math.sin(radians)), b2Vec2(body_tmp.position[0],body_tmp.position[1]),1)
 
-        if(wasd[4] == 1 and self.hook_status == 0):
-            self.hook_status = 1
-            #self.create_rope(1)
-            tmp = disparos(self.world.CreateDynamicBody(
-                            position=(body_tmp.position[0]+(math.cos(radians)*0.4),body_tmp.position[1]+(math.sin(radians)*0.4)),
-                            bullet=True,angle = body_tmp.angle,  angularDamping=5.0, linearDamping= 1.0,
-                            fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/1.4)), density=0.1),
-                            linearVelocity=(30*math.cos(radians), 30*math.sin(radians))), 1)
-            self.bullet.append(tmp)
-            #print tmp.get_body()
-            self.create_rope(tmp.get_body(), tmp.get_body().position, 1.0)
+        #if(wasd[4] == 1 and self.hook_status == 0):
+        #    self.hook_status = 1
+        #    #self.create_rope(1)
+        #    tmp = disparos(self.world.CreateDynamicBody(
+        #                    position=(body_tmp.position[0]+(math.cos(radians)*0.4),body_tmp.position[1]+(math.sin(radians)*0.4)),
+        #                    bullet=True,angle = body_tmp.angle,  angularDamping=5.0, linearDamping= 1.0,
+        #                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/1.4)), density=0.1),
+        #                    linearVelocity=(30*math.cos(radians), 30*math.sin(radians))), 1)
+        #    self.bullet.append(tmp)
+        #    #print tmp.get_body()
+        #    self.create_rope(tmp.get_body(), tmp.get_body().position, 1.0)
 
-        if(wasd[4] == 0 and self.hook_status == 1):
-            self.hook_status = 0
-            self.destroy_rope()
-            for taa in list(self.bullet):
-                if (taa.get_hook() == 1):
-                    self.world.DestroyBody(taa.get_body())
-                    self.bullet.remove(taa)
+        #if(wasd[4] == 0 and self.hook_status == 1):
+        #    self.hook_status = 0
+        #    self.destroy_rope()
+        #    for taa in list(self.bullet):
+        #        if (taa.get_hook() == 1):
+        #            self.world.DestroyBody(taa.get_body())
+        #            self.bullet.remove(taa)
 

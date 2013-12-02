@@ -11,6 +11,7 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import clases.audio
 from random import randint
+
 size_tile = 0.16
 
 class tren:
@@ -25,6 +26,7 @@ class tren:
         self.create_player()
         self.damage = 0.0
         self.block_fire = 1200
+        self.timelap = 0.0
 
     def add_damage(self, damages):
         print "yo"
@@ -42,7 +44,7 @@ class tren:
         #self.body.userData
 
     def create_box(self):
-        tmp = asteroids(self.world.CreateDynamicBody(position=(self.pos_init[0]*size_tile,self.pos_init[1]*size_tile), angularDamping=10.0, linearDamping= 10.0), 2, 100000)
+        tmp = asteroids(self.world.CreateDynamicBody(position=(self.pos_init[0]*size_tile,self.pos_init[1]*size_tile), angularDamping=10.0, linearDamping= 5.0), 2, 50000, [6.0,3.0])
         #print tmp.get_body()
         return tmp
         #tmp = self.world.CreateDynamicBody(position=(pos),angularDamping=30.0, linearDamping= 20.0, angle= 0)
@@ -74,14 +76,26 @@ class tren:
                 body_tmp.angle = -1.57
                 if (self.block_fire >= 0):
                     self.block_fire -= t_delta
-                if body_tmp.position[1] < -2:
-                    self.body.get_body().position = [18.4, 50.0]
-                    print self.body.get_body().position
-                speed = (1.0-self.damage)*200
-                
-                body_tmp.ApplyLinearImpulse(b2Vec2(0.0,-speed*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)
-                
 
+                if (self.timelap >= 0):
+                    self.timelap -= t_delta
+
+                
+                if body_tmp.position[1] < 1.14:
+                    self.body.get_body().position = [18.43, 90.0]
+
+                if(self.timelap < 0.0):
+                    clases.audio.efectSound(25)
+                    self.timelap = 20000.0
+                    self.body.get_body().position = [18.43, 9.0]
+
+                if(self.body.get_body().position[1]< 6.0 and self.body.get_body().position[1] > 3.0):
+                    speed = (1.0-self.damage)*100
+                else:
+                    speed = (1.0-self.damage)*400
+                #print self.body.get_body().position
+                #speed = (1.0-self.damage)*200
+                body_tmp.ApplyLinearImpulse(b2Vec2(0.0,-speed*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)
             except:
                 pass
 

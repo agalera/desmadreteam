@@ -17,6 +17,7 @@ from PIL.Image import open
 import sys
 from Box2D import *
 import clases.audio
+from random import randint
 
 resolution = [1600,800]
 radians = 0
@@ -199,10 +200,12 @@ def update():
     #joint_check()
     #draw posible options
     #draw_posible_options()
-    Lchunk[0].pick_object(v_object_select)
+    tmp = Lchunk[0].pick_object(v_object_select)
+    if tmp != False:
+        player.add_hp(2.0)
     #print trenecito.get_position
-    if (int(trenecito.get_position()[0][1]) == 5):
-        if (len(civiles) < 20):
+    if (int(trenecito.get_position()[0][1]) == 4):
+        if (len(civiles) < 40):
             generar_civiles()
     player.move(wasd, t_delta, radians)
 
@@ -241,6 +244,10 @@ def initFun():
     textures.append(loadImage('assets/bullet.png'))
     textures.append(loadImage('assets/stGriddeco.png'))
     textures.append(loadImage('assets/icons.png'))
+    textures.append(loadImage('assets/tren_1.png'))
+    textures.append(loadImage('assets/inicio.png'))
+    textures.append(loadImage('assets/gameover.png'))
+    textures.append(loadImage('assets/frases1.png'))
 
     player = player(bullet, joints, borrar)
     myListener = myContactListener(borrar, player)
@@ -251,13 +258,52 @@ def initFun():
     trenecito = tren([115,29], world, bullet)
     Lchunk.append(chunk(0,0, world))
     enable_vsync()
+    reshapeFun(resolution[0], resolution[1])
+    for i in range(2):
+        glClearColor(0.0,0.0,0.0,0.0)
+        glClear(GL_COLOR_BUFFER_BIT)
+        glLoadIdentity()
+        glPushMatrix()
+        glLoadIdentity()
+        draw_pantallazo(6)
+        glPopMatrix()
+        glutSwapBuffers()
+    time.sleep(5)
 
+
+
+def draw_pantallazo(num):
+    setupTexture(num)
+    texture_info_temp = 2
+    textureXOffset = 1
+    textureYOffset = 1
+    textureHeight  = 1
+    textureWidth   = 1
+
+    #glTranslatef( self.body.position[0] , self.body.position[1], 0.00)
+    glClearColor(0.0,0.0,0.0,0.0)
+    glClear(GL_COLOR_BUFFER_BIT)
+    glRotate(0, 0, 0, 1)
+    glBegin(GL_QUADS)
+    glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+
+    glVertex3f(-zoom, -zoom, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+    glVertex3f(zoom, -zoom, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+    glVertex3f( zoom,  zoom, 0)
+
+    glTexCoord2f(textureXOffset,textureYOffset)
+    glVertex3f(-zoom, zoom, 0)
+    glEnd()
+    glRotate(0, 0, 0, -1)
+    #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    #pass
     for i in range(8):
-        tmp = i * 16
-        civiles.append(civil([20,2],world, tmp, player, bullet))
+        civiles.append(civil([18,8],world, i * 16, player, bullet))
 
 
 def reshapeFun(wi,he):
@@ -305,7 +351,6 @@ def new_frame(init):
         glMatrixMode(GL_MODELVIEW)
 
 def RenderGLFun():
-
     update()
     #---- Init Experimental zone ----
     global animate
@@ -319,7 +364,6 @@ def RenderGLFun():
     glClear(GL_COLOR_BUFFER_BIT)
     glLoadIdentity()
     create_camera()
-
     #draw time (optional)
 
     setupTexture(0)
@@ -337,19 +381,92 @@ def RenderGLFun():
     setupTexture(2)
     for taa in list(bullet):
         taa.draw()
+    setupTexture(5)
     trenecito.draw(t_delta)
     #GUI
     #
     setupTexture(1)
     glPushMatrix()
     glLoadIdentity()
+
     draw_caretos()
     setupTexture(4)
     draw_kills()
+    setupTexture(3)
+    draw_heals()
+    draw_frases()
     glPopMatrix()
     #draw_select()
     #go to gpu
     glutSwapBuffers()
+
+def draw_frases():
+    #64 frases
+    #0.015625
+    setupTexture(8)
+    texture_info_temp = 2
+    textureXOffset = 1
+    textureYOffset = last_kill[1]*0.015625
+    textureHeight  = 0.015625
+    textureWidth   = 1
+
+    glTranslatef(-0.5,-2.7, 0)
+    glRotate(0, 0, 0, 1)
+    glBegin(GL_QUADS)
+    glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+    glVertex3f(-1.8, -0.2, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+    glVertex3f(1.8, -0.2, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+    glVertex3f( 1.8,  0.2, 0)
+
+    glTexCoord2f(textureXOffset,textureYOffset)
+    glVertex3f(-1.8, 0.2, 0)
+    glEnd()
+    glRotate(0, 0, 0, -1)
+    glTranslatef(0.5,2.7, 0)
+
+def draw_heals():
+    tmp = 0
+    hp = player.get_damage()
+    if hp > 0.0:
+        for a in range(int(hp)):
+            tmp += 0.2
+            draw_heal(tmp)
+    else:
+        draw_pantallazo(7)
+def draw_heal(bxs):
+
+    tile = 82
+    size_tile = 0.08
+    #v_object_select = player.get_position()[0]
+    #print v_object_select
+    bx = zoom - bxs
+    by = zoom-0.2
+
+    texture_info_temp = [int(tile), 0];
+    textureXOffset = float(texture_info_temp[0]/16.0)+0.001
+    textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
+    textureHeight  = float(0.060)
+    textureWidth   = float(0.060)
+    glTranslatef(bx,by, 0)
+    glBegin(GL_QUADS)
+    glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+    glVertex3f(-0.1, -0.1, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+    glVertex3f(+0.1, -0.1, 0)
+
+    glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+    glVertex3f(+0.1, +0.1, 0)
+
+    glTexCoord2f(textureXOffset,textureYOffset)
+    glVertex3f(-0.1, + 0.1, 0)
+
+    glEnd()
+    glTranslatef(-bx,-by, 0)
 
 def draw_kills():
     tmp = str(total_kills)
@@ -361,7 +478,7 @@ def draw_kills():
     draw_kill(0.6, tmp[2])
     draw_kill(1.0, tmp[1])
     draw_kill(1.4, tmp[0])
-    
+
 def draw_kill(bxs,numerito):
 
     tile = int(numerito)+14
@@ -436,7 +553,7 @@ def draw_civils():
             total_kills += 1
             print "total kills: " + str(total_kills)
             last_kill[0] = taa.get_tileid()+14
-            last_kill[1] = 0
+            last_kill[1] = randint(0,64)
             civiles_muertos.append(taa)
             civiles.remove(taa)
     if (tmp == True):
