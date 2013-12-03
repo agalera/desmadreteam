@@ -72,7 +72,7 @@ class civil:
             self.body.set_vivo()
             self.body.destruyeme()
         if (self.mode_normal == False and self.body.get_vivo() == False):
-            self.body.draw(self.tileid+15)
+            self.body.draw(self.tileid+15, 0.0)
         else:
             if (self.block_fire >= 0):
                 self.block_fire -= t_delta
