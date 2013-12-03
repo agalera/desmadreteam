@@ -107,6 +107,7 @@ def ControlTeclado(key,x,y):
         wasd[3] = 1
     if (key == "q"):
         print int(v_object_select[0]),int(v_object_select[1])
+        Lchunk[0].set_object(v_object_select, 496)
         wasd[4] = 1
 
 def object_select():
@@ -200,12 +201,13 @@ def update():
     #joint_check()
     #draw posible options
     #draw_posible_options()
-    tmp = Lchunk[0].pick_object(v_object_select)
-    if tmp != False:
-        player.add_hp(2.0)
+    #tmp = Lchunk[0].pick_object(v_object_select)
+    #if tmp != False:
+    #    print tmp
+    #    player.add_hp(2.0)
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):
-        if (len(civiles) < 40):
+        if (len(civiles) < 1):
             generar_civiles()
     player.move(wasd, t_delta, radians)
 
@@ -290,8 +292,8 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    for i in range(8):
-        civiles.append(civil([18,7],world, i * 16, player, bullet))
+    for i in range(1):
+        civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
 
 
 def reshapeFun(wi,he):
@@ -550,7 +552,7 @@ def draw_caretos():
     glTranslatef(-bx,-by, 0)
 def draw_civils():
     tmp = False
-    glCallList(civiles_muertos_DL)
+
     for taa in list(civiles):
         if (taa.get_normal() == True):
             taa.draw(t_delta, animate)
@@ -572,6 +574,7 @@ def draw_civils():
             setupTexture(1)
             taa.draw(0,animate)
         glEndList()
+    glCallList(civiles_muertos_DL)
 
 
 def draw_select():

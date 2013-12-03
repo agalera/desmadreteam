@@ -24,13 +24,22 @@ class chunk:
         x = int(position[0])
         y = int(position[1])
         return self.Matrix[2][x][y].get_tile()
+    def set_object(self,position, id_item):
 
-    def pick_object(self, position): #deprecated
+        x = int(position[0])
+        y = int(position[1])
+        self.Matrix[2][x][y].set_tile(id_item)
+        self.items[int(x/20)].append([x,y,self.Matrix[2][x][y]])
+        self.regenerate_items(int(position[0]/20))
+
+    def pick_object(self, position):
+
         try:
             x = int(position[0])
             y = int(position[1])
             xp = int(x/20)
             if (self.Matrix[2][x][y].get_tile() != -1):
+                print x, y, xp
                 tile = self.Matrix[2][x][y].get_tile()
                 self.Matrix[2][x][y].set_tile(-1)
                 for taa in self.items[xp]:

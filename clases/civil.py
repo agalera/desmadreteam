@@ -14,8 +14,9 @@ import clases.audio
 size_tile = 0.16
 
 class civil:
-    def __init__ (self, pos_init, world, tileid, player, bullet):
+    def __init__ (self, pos_init, world, tileid, player, bullet, Lchunk):
         #self.world = world
+        self.Lchunk = Lchunk
         self.bullet = bullet
         self.player = player
         self.sangre_angle = randint(0,360)
@@ -35,6 +36,10 @@ class civil:
         #print "damage: " + str(damages)
         clases.audio.efectSound(randint(16,24))
         if (self.damage > 1 and self.mode_normal == True):
+            pos = [0,0]
+            pos[0] = int(self.body.get_body().position[0] * 3.2)
+            pos[1] = int(self.body.get_body().position[1] * 3.2)
+            self.Lchunk[0].set_object(pos, 496)
             self.change_mode()
 
     def change_touch(self, val=False):
