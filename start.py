@@ -573,8 +573,7 @@ def draw_civils():
             taa.draw(0,animate)
             civiles_muertos.remove(taa)
         glEndList()
-    else:
-        glCallList(civiles_muertos_DL)
+    glCallList(civiles_muertos_DL)
 
 
 def draw_select():
