@@ -201,10 +201,10 @@ def update():
     #joint_check()
     #draw posible options
     #draw_posible_options()
-    #tmp = Lchunk[0].pick_object(v_object_select)
-    #if tmp != False:
-    #    print tmp
-    #    player.add_hp(2.0)
+    tmp = Lchunk[0].pick_object(v_object_select)
+    if tmp != False:
+        print tmp
+        player.add_hp(2.0)
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):
         if (len(civiles) < 1):
@@ -567,13 +567,13 @@ def draw_civils():
             civiles.remove(taa)
     if (tmp == True):
         glNewList(civiles_muertos_DL, GL_COMPILE)
-        glCallList(civiles_muertos_DL)
+        #glCallList(civiles_muertos_DL)
         for taa in list(civiles_muertos):
             setupTexture(3)
             taa.draw_sangre()
             setupTexture(1)
             taa.draw(0,animate)
-            civiles_muertos.remove(taa)
+            #civiles_muertos.remove(taa)
         glEndList()
     glCallList(civiles_muertos_DL)
 
