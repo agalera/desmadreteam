@@ -554,23 +554,24 @@ def draw_civils():
         if (taa.get_normal() == True):
             taa.draw(t_delta, animate)
         else:
-            if tmp == False:
-                glNewList(civiles_muertos_DL, GL_COMPILE)
-                tmp = True
+            tmp = True
             global total_kills
             global last_kill
             total_kills += 1
             print "total kills: " + str(total_kills)
             last_kill[0] = taa.get_tileid()+14
             last_kill[1] = randint(0,64)
-            #draw
+            civiles_muertos.append(taa)
+            civiles.remove(taa)
+    if (tmp == True):
+        glNewList(civiles_muertos_DL, GL_COMPILE)
+        glCallList(civiles_muertos_DL)
+        for taa in list(civiles_muertos):
             setupTexture(3)
             taa.draw_sangre()
             setupTexture(1)
             taa.draw(0,animate)
-            #draw
-            civiles.remove(taa)
-    if (tmp == True):
+            civiles_muertos.remove(taa)
         glEndList()
     else:
         glCallList(civiles_muertos_DL)
