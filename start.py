@@ -552,7 +552,6 @@ def draw_caretos():
     glTranslatef(-bx,-by, 0)
 def draw_civils():
     tmp = False
-
     for taa in list(civiles):
         if (taa.get_normal() == True):
             taa.draw(t_delta, animate)
@@ -568,11 +567,13 @@ def draw_civils():
             civiles.remove(taa)
     if (tmp == True):
         glNewList(civiles_muertos_DL, GL_COMPILE)
+        glCallList(civiles_muertos_DL)
         for taa in list(civiles_muertos):
             setupTexture(3)
             taa.draw_sangre()
             setupTexture(1)
             taa.draw(0,animate)
+            civiles_muertos.remove(taa)
         glEndList()
     glCallList(civiles_muertos_DL)
 

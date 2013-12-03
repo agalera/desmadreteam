@@ -43,7 +43,7 @@ class components:
     def get_worldcenter(self):
         return self.main.body.worldCenter
 
-    def draw(self, posible = False, angle = False):
+    def draw(self, posible = False, angle = False, zindex= 0.1):
         if (self.main != None):
             self.position[0][0] = self.main.body.position[0]
             self.position[0][1] = self.main.body.position[1]
@@ -60,7 +60,7 @@ class components:
         textureHeight  = float(0.060)
         textureWidth   = float(0.060)
 
-        glTranslatef( self.position[0][0] , self.position[0][1], 0.00)
+        glTranslatef( self.position[0][0] , self.position[0][1], zindex)
         glRotate(math.degrees(self.position[1]), 0, 0, 1)
         glBegin(GL_QUADS)
         glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
@@ -76,4 +76,4 @@ class components:
         glVertex2f(-size_tile, size_tile)
         glEnd()
         glRotate(math.degrees(self.position[1]), 0, 0, -1)
-        glTranslatef( -self.position[0][0] , -self.position[0][1], 0.00)
+        glTranslatef( -self.position[0][0] , -self.position[0][1], -zindex)
