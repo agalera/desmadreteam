@@ -207,7 +207,7 @@ def update():
         player.add_hp(2.0)
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):
-        if (len(civiles) < 1):
+        if (len(civiles) < 20):
             generar_civiles()
     player.move(wasd, t_delta, radians)
 
@@ -229,14 +229,21 @@ def initFun():
     global civiles
     global civiles_muertos
     global civiles_muertos_DL
+    global vida_DL
+    global last_total_kills
+    global total_kills_DL
     global total_kills
     global last_kill
     global trenecito
+    global last_damage
 
+    last_total_kills = -1
     last_kill = [-1,-1]
-
+    last_damage = 0.0
     total_kills = 0
     civiles_muertos_DL = glGenLists(9)
+    vida_DL = glGenLists(10)
+    total_kills_DL = glGenLists(11)
     civiles = []
     civiles_muertos = []
     clases.audio.stationMusic(0)
@@ -292,7 +299,7 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    for i in range(1):
+    for i in range(8):
         civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
 
 
@@ -393,18 +400,20 @@ def RenderGLFun():
         setupTexture(5)
         trenecito.draw(t_delta)
         #GUI
-        #
-        setupTexture(1)
+
         glPushMatrix()
         glLoadIdentity()
 
+        setupTexture(1)
         draw_caretos()
         setupTexture(4)
         draw_kills()
         setupTexture(3)
         draw_heals()
         draw_frases()
+
         glPopMatrix()
+        #FIN GUI
         #draw_select()
         #go to gpu
         glutSwapBuffers()
@@ -438,15 +447,23 @@ def draw_frases():
     glTranslatef(0.5,2.7, 0)
 
 def draw_heals():
-    tmp = 0
+    global last_damage
     hp = player.get_damage()
-    if hp > 0.0:
-        for a in range(int(hp)):
-            tmp += 0.2
-            draw_heal(tmp)
-    else:
-        global status_global
-        status_global = 3
+
+    if hp != last_damage:
+        last_damage = hp
+        if hp > 0:
+            tmp = 0
+            glNewList(vida_DL, GL_COMPILE)
+            for a in range(int(hp)):
+                tmp += 0.2
+                draw_heal(tmp)
+            glEndList()
+        else:
+            global status_global
+            status_global = 3
+    glCallList(vida_DL)
+
 def draw_heal(bxs):
 
     tile = 82
@@ -479,15 +496,18 @@ def draw_heal(bxs):
     glTranslatef(-bx,-by, 0)
 
 def draw_kills():
-    tmp = str(total_kills)
-    tmp_len = len(tmp)
-    if(tmp_len != 4):
-        for a in range(4-tmp_len):
-            tmp =  "0" + str(tmp)
-    draw_kill(0.2, tmp[3])
-    draw_kill(0.6, tmp[2])
-    draw_kill(1.0, tmp[1])
-    draw_kill(1.4, tmp[0])
+    global last_total_kills
+
+    if total_kills != last_total_kills:
+        last_total_kills = total_kills
+        glNewList(total_kills_DL, GL_COMPILE)
+        tmp = str(total_kills).zfill(4)
+        draw_kill(0.2, tmp[3])
+        draw_kill(0.6, tmp[2])
+        draw_kill(1.0, tmp[1])
+        draw_kill(1.4, tmp[0])
+        glEndList()
+    glCallList(total_kills_DL)
 
 def draw_kill(bxs,numerito):
 
