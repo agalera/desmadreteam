@@ -9,6 +9,8 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 import clases.audio
+from clases.objetos import objetos
+from clases.armas import armas
 
 size_tile = 0.16
 
@@ -30,6 +32,12 @@ class player:
 
     def change_touch(self, val=False):
         self.touch = val
+    def pick_object(self, objeto_arma):
+        if objeto_arma != False:
+            if isinstance(objeto_arma, objetos):
+                self.add_hp(objeto_arma.get_value())
+            elif isinstance(objeto_arma, armas):
+                self.set_arma(objeto_arma)
 
     def set_world(self, world):
         self.world = world
@@ -49,7 +57,7 @@ class player:
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
         self.body = components(self.create_box(pos), self, 1, self.world)
-        self.arma = armas(1, 100, 1, self.bullet, self.body, self.world)
+        self.arma = armas(3, self.bullet, self.body, self.world)
         #
     def set_other_body(self, var, var2):
 

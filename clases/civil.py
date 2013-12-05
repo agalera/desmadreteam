@@ -12,6 +12,7 @@ from random import randint
 import clases.audio
 from objetos import objetos
 from armas import armas
+from consumibles import consumibles
 
 size_tile = 0.16
 
@@ -32,7 +33,8 @@ class civil:
         self.create_player()
         self.damage = 0.0
         if self.tileid == 16:
-            self.arma = armas(1, 1000, 1, self.bullet, self.body, self.world)
+
+            self.arma = armas(randint(1,3), self.bullet, self.body, self.world)
         else:
             self.arma = None
     def add_damage(self, damages):
