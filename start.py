@@ -361,13 +361,13 @@ def RenderGLFun():
         glLoadIdentity()
         if status_global == 0:
             draw_pantallazo(6)
+            if (wasd[0] == True):
+                status_global = 1
         else:
             draw_pantallazo(7)
         glPopMatrix()
         glutSwapBuffers()
-        if (wasd[0] == True):
 
-            status_global = 1
     #pepito
     elif status_global == 1:
         update()
