@@ -204,9 +204,9 @@ def update():
     #draw_posible_options()
     tmp = Lchunk[0].pick_object(v_object_select)
     if tmp != False:
-        if tmp.get_id() == 496:
+        if isinstance(tmp, objetos):
             player.add_hp(tmp.get_value())
-        else:
+        elif isinstance(tmp, armas):
             player.set_arma(tmp)
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):
