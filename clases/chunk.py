@@ -5,6 +5,8 @@ from OpenGL.GLU import *
 from clases.casilla import casilla
 from clases.asteroids import asteroids
 from Box2D import *
+from objetos import objetos
+from armas import armas
 import copy
 
 size_tile = 0.32
@@ -24,11 +26,11 @@ class chunk:
         x = int(position[0])
         y = int(position[1])
         return self.Matrix[2][x][y].get_tile()
-    def set_object(self,position, id_item):
+    def set_object(self,position, arma_objeto):
 
         x = int(position[0])
         y = int(position[1])
-        self.Matrix[2][x][y].set_tile(id_item)
+        self.Matrix[2][x][y].set_tile(arma_objeto.get_id(), arma_objeto)
         self.items[int(x/20)].append([x,y,self.Matrix[2][x][y]])
         self.regenerate_items(int(position[0]/20))
 
@@ -41,13 +43,14 @@ class chunk:
             if (self.Matrix[2][x][y].get_tile() != -1):
                 print x, y, xp
                 tile = self.Matrix[2][x][y].get_tile()
+                tmp = self.Matrix[2][x][y].get_object()
                 self.Matrix[2][x][y].set_tile(-1)
                 for taa in self.items[xp]:
                     if (x == taa[0] and y == taa[1]):
                         self.items[xp].remove(taa)
 
                 self.regenerate_items(xp)
-                return str(tile)
+                return tmp
             else:
                 return False
         except:
@@ -168,7 +171,10 @@ class chunk:
                 for taa in pepe:
                     if taa != "":
                         x +=1
-                        tmpe = casilla(int(taa)-1)
+                        if (capa == 2 and int(taa)-1 != -1):
+                            tmpe = casilla(int(taa)-1, objetos(int(taa)-1, 1))
+                        else:
+                            tmpe = casilla(int(taa)-1)
                         if (int(taa)-1 != -1):
                             if (capa < 2):
                                 self.create_tile(x,y,int(taa)-1)

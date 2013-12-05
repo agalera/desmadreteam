@@ -10,15 +10,15 @@ class disparos:
         self.body = body
         self.hook = hook
         self.body.userData = self
-        self.damage = 0.0
     def get_hook(self):
     	return self.hook
     def get_body(self):
         return self.body
     def add_damage(self, fl):
-        if (self.damage != 0.0):
-            "esto ya ha colisionado antes eh"
-        self.damage += fl
+        pass
+#        if (self.damage != 0.0):
+#            "esto ya ha colisionado antes eh"
+#        self.damage += fl
     def awake(self):
         return self.body.awake
     def set_awake(self, boolean):

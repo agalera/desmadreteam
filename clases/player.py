@@ -3,7 +3,7 @@ from __future__ import division
 import math
 from Box2D import *
 import copy
-from disparos import disparos
+from armas import armas
 from components import components
 from OpenGL.GL import *
 from OpenGL.GLUT import *
@@ -21,13 +21,13 @@ class player:
         self.borrar = borrar
         self.joints = joints
         self.hook_status = 0
-        self.block_fire = -0.1
         self.touch = False
         self.mode_normal = True
         self.rope = None
         self.other_body = None
         self.relative_pos = None
         self.damage = 6.0
+
     def change_touch(self, val=False):
         self.touch = val
 
@@ -38,13 +38,18 @@ class player:
         self.damage -= damage
     def add_hp(self, hp):
         self.damage += hp
-
+    def get_arma(self):
+        return self.arma
+    def set_arma(self, arma):
+        self.arma = arma
+        self.arma.set_body(self.body)
     def get_damage(self):
         return self.damage
 
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
         self.body = components(self.create_box(pos), self, 1, self.world)
+        self.arma = armas(1, 100, 1, self.bullet, self.body, self.world)
         #
     def set_other_body(self, var, var2):
 
@@ -135,61 +140,9 @@ class player:
     def move(self,wasd, t_delta, radians):
         body_tmp = self.body.get_body()
         body_tmp.angle = radians
-        if (self.block_fire >= 0):
-            self.block_fire -= t_delta
-        #if (wasd[4] == 1):
-        #    self.body.get_body().position = [1.40,4.0]
-
-        #if (wasd[0] == 1):
-        #    if (self.rope != None):
-        #        self.rope.length -= t_delta/1000
-        #    else:
-        #        if self.touch == True:
-        #            self.touch = False
-        #            body_tmp.ApplyLinearImpulse(b2Vec2(0,0.6), b2Vec2(body_tmp.position[0],2-body_tmp.position[1]),1)
-        #if (self.mode_normal == True):
-        #    if (wasd[1] == 1):
-        #        if (body_tmp.linearVelocity[0]> -10):
-        #            if self.touch == True:
-        #                body_tmp.ApplyLinearImpulse(b2Vec2(-0.004*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-        #            else:
-        #                body_tmp.ApplyLinearImpulse(b2Vec2(-0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-        #            body_tmp.ApplyTorque(0.4,1)
-        #    if (wasd[3] == 1):
-        #        if (body_tmp.linearVelocity[0]< 10):
-        #            if self.touch == True:
-        #                body_tmp.ApplyLinearImpulse(b2Vec2(0.004*t_delta,0.0000000), b2Vec2(2-body_tmp.position[0],body_tmp.position[1]),1)
-        #            else:
-        #                body_tmp.ApplyLinearImpulse(b2Vec2(0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-        #            body_tmp.ApplyTorque(-0.4,1)
-        #
-        #else:
-        #    if (wasd[1] == 1):
-        #        if (body_tmp.linearVelocity[0]> -1):
-        #            body_tmp.ApplyLinearImpulse(b2Vec2(-0.001*t_delta,0.0000000), b2Vec2(2+body_tmp.position[0],body_tmp.position[1]),1)
-        #        body_tmp.ApplyTorque(2,1)
-        #    if (wasd[3] == 1):
-        #        if (body_tmp.linearVelocity[0]< 1):
-        #            body_tmp.ApplyLinearImpulse(b2Vec2(0.001*t_delta,0.0000000), b2Vec2(2-body_tmp.position[0],body_tmp.position[1]),1)
-        #        body_tmp.ApplyTorque(-2,1)
-
-        #if (wasd[2] == 1  and self.block_fire < 0):
-        #    if (self.rope != None):
-        #        self.rope.length += t_delta/1000
-        #    else:
-        #        self.change_mode()
-        #        self.block_fire = 240.0
-
-        if(wasd[5][0] == 1 and self.block_fire < 0.0):
-            clases.audio.efectSound(15)
-            self.block_fire = 150.0
-            self.bullet.append(disparos(self.world.CreateDynamicBody(
-                position=(body_tmp.position[0]+(math.cos(radians)*0.22),body_tmp.position[1]+(math.sin(radians)*0.22)),
-                bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
-                fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=60),
-                linearVelocity=(50*math.cos(radians), 50*math.sin(radians))), 0)
-            )
-
+        self.arma.update(t_delta)
+        if(wasd[5][0] == 1):
+            self.arma.fire()
 
         if(wasd[0] == 1):
             body_tmp.ApplyLinearImpulse(b2Vec2(0.0,0.0015*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)

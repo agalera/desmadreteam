@@ -18,6 +18,7 @@ import sys
 from Box2D import *
 import clases.audio
 from random import randint
+from clases.objetos import objetos
 
 resolution = [1600,800]
 radians = 0
@@ -107,7 +108,7 @@ def ControlTeclado(key,x,y):
         wasd[3] = 1
     if (key == "q"):
         print int(v_object_select[0]),int(v_object_select[1])
-        Lchunk[0].set_object(v_object_select, 496)
+        Lchunk[0].set_object(v_object_select, objetos(496,2.0))
         wasd[4] = 1
 
 def object_select():
@@ -203,8 +204,10 @@ def update():
     #draw_posible_options()
     tmp = Lchunk[0].pick_object(v_object_select)
     if tmp != False:
-        print tmp
-        player.add_hp(2.0)
+        if tmp.get_id() == 496:
+            player.add_hp(tmp.get_value())
+        else:
+            player.set_arma(tmp)
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):
         if (len(civiles) < 20):

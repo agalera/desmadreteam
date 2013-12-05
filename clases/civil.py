@@ -3,7 +3,6 @@ from __future__ import division
 import math
 from Box2D import *
 import copy
-from disparos import disparos
 from components import components
 from OpenGL.GL import *
 from OpenGL.GLUT import *
@@ -11,6 +10,8 @@ from OpenGL.GLU import *
 import clases.audio
 from random import randint
 import clases.audio
+from armas import armas
+from objetos import objetos
 size_tile = 0.16
 
 class civil:
@@ -29,19 +30,29 @@ class civil:
         self.world = world
         self.create_player()
         self.damage = 0.0
-        self.block_fire = 2000
-
+        if self.tileid == 16:
+            self.arma = armas(1, 1000, 1, self.bullet, self.body, self.world)
+        else:
+            self.arma = None
     def add_damage(self, damages):
         self.damage += damages
         #print "damage: " + str(damages)
         clases.audio.efectSound(randint(16,24))
         if (self.damage > 1 and self.mode_normal == True):
             pos = [0,0]
-            if randint(0,30) == 30:
-                pos[0] = int((self.body.get_body().position[0]+0.16) * 3.125)
-                pos[1] = int((self.body.get_body().position[1]+0.16) * 3.125)
-                self.Lchunk[0].set_object(pos, 496)
+            pos[0] = int((self.body.get_body().position[0]+0.16) * 3.125)
+            pos[1] = int((self.body.get_body().position[1]+0.16) * 3.125)
+            if self.arma == None:
+                if randint(0,30) == 30:
+                    self.Lchunk[0].set_object(pos, objetos(496,2.0))
+            else:
+                self.Lchunk[0].set_object(pos, self.arma)
             self.change_mode()
+
+    def get_arma(self):
+        return self.arma
+    def set_arma(self, arma):
+        self.arma = arma
 
     def change_touch(self, val=False):
         self.touch = val
@@ -63,15 +74,8 @@ class civil:
     def draw_sangre(self):
         self.body.draw(self.id_sangre, self.sangre_angle)
     def open_fire(self, body_tmp):
-        if(self.block_fire < 0.0):
-            self.block_fire = 1600.0
-            clases.audio.efectSound(26)
-            self.bullet.append(disparos(self.world.CreateDynamicBody(
-                position=(body_tmp.position[0]+(math.cos(body_tmp.angle)*0.3),body_tmp.position[1]+(math.sin(body_tmp.angle)*0.3)),
-                bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
-                fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=60),
-                linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0)
-            )
+            self.arma.fire()
+
     def draw(self, t_delta, animate):
 
         if (self.mode_normal == False and self.body.get_vivo() == True):
@@ -80,8 +84,8 @@ class civil:
         if (self.mode_normal == False and self.body.get_vivo() == False):
             self.body.draw(self.tileid+15, 0.0)
         else:
-            if (self.block_fire >= 0):
-                self.block_fire -= t_delta
+            if self.arma != None:
+                self.arma.update(t_delta)
             body_tmp = self.body.get_body()
             pasive_position = self.player.get_position()
             if (self.tileid == 16):
