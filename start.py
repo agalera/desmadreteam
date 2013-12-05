@@ -19,6 +19,7 @@ from Box2D import *
 import clases.audio
 from random import randint
 from clases.objetos import objetos
+from clases.armas import armas
 
 resolution = [1600,800]
 radians = 0
@@ -207,6 +208,7 @@ def update():
         if isinstance(tmp, objetos):
             player.add_hp(tmp.get_value())
         elif isinstance(tmp, armas):
+            print "hola"
             player.set_arma(tmp)
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):

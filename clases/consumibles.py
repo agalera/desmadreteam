@@ -3,20 +3,18 @@ from OpenGL.GL import *
 from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Box2D import *
-from armas import armas
-
 import math
+import clases.audio
 
-class objetos:
+size_tile=0.16
+class consumibles:
     def __init__ (self,type_id, value):
-        self.type_id = type_id
-        #armas u otros
         self.value = value
-
+        self.type_id = type_id
     def get_id(self):
         return self.type_id
-
     def get_value(self):
-        return self.value
+        pass
     def use(self):
-        self.value.use()
+            return self.value
+

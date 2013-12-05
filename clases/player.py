@@ -142,7 +142,7 @@ class player:
         body_tmp.angle = radians
         self.arma.update(t_delta)
         if(wasd[5][0] == 1):
-            self.arma.fire()
+            self.arma.use()
 
         if(wasd[0] == 1):
             body_tmp.ApplyLinearImpulse(b2Vec2(0.0,0.0015*t_delta), b2Vec2(body_tmp.position[0],2+body_tmp.position[1]),1)

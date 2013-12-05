@@ -10,8 +10,9 @@ from OpenGL.GLU import *
 import clases.audio
 from random import randint
 import clases.audio
-from armas import armas
 from objetos import objetos
+from armas import armas
+
 size_tile = 0.16
 
 class civil:
@@ -44,7 +45,7 @@ class civil:
             pos[1] = int((self.body.get_body().position[1]+0.16) * 3.125)
             if self.arma == None:
                 if randint(0,30) == 30:
-                    self.Lchunk[0].set_object(pos, objetos(496,2.0))
+                    self.Lchunk[0].set_object(pos, consumibles(496,2.0))
             else:
                 self.Lchunk[0].set_object(pos, self.arma)
             self.change_mode()
@@ -74,7 +75,7 @@ class civil:
     def draw_sangre(self):
         self.body.draw(self.id_sangre, self.sangre_angle)
     def open_fire(self, body_tmp):
-            self.arma.fire()
+            self.arma.use()
 
     def draw(self, t_delta, animate):
 

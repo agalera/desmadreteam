@@ -25,7 +25,7 @@ class armas:
     def update(self, t_delta):
         if (self.block_fire >= 0):
                 self.block_fire -= t_delta
-    def fire(self):
+    def use(self):
         if (self.block_fire < 0.0):
             self.block_fire = self.delay
             clases.audio.efectSound(26)
