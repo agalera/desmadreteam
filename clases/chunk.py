@@ -25,7 +25,7 @@ class chunk:
         self.load_map()
 
     def generate_asteroidsDisplay_list(self):
-        texture_info_temp = [1, 0];
+        texture_info_temp = [0, 0];
         textureXOffset = float(texture_info_temp[0]/16.0)+0.001
         textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
         textureHeight  = float(0.060)
@@ -34,16 +34,16 @@ class chunk:
         glNewList(self.asteroidsDisplayList, GL_COMPILE)
         glBegin(GL_QUADS)
         glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
-        glVertex3f(-size_tile, -size_tile, 0)
+        glVertex3f(-size_tile/2, -size_tile/2, 0)
 
         glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
-        glVertex3f(size_tile, -size_tile, 0)
+        glVertex3f(size_tile/2, -size_tile/2, 0)
 
         glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
-        glVertex3f( size_tile,  size_tile, 0)
+        glVertex3f( size_tile/2,  size_tile/2, 0)
 
         glTexCoord2f(textureXOffset,textureYOffset)
-        glVertex3f(-size_tile, size_tile, 0)
+        glVertex3f(-size_tile/2, size_tile/2, 0)
         glEnd()
         glEndList()
 

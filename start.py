@@ -341,10 +341,10 @@ def new_frame(init):
     if init == True:
         glMatrixMode(GL_TEXTURE)
         glPushMatrix()
-
         glTranslatef(0.0625*int(animate),0.0,0.0)
+        glMatrixMode(GL_MODELVIEW)
     else:
-        #glMatrixMode(GL_TEXTURE)
+        glMatrixMode(GL_TEXTURE)
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
 

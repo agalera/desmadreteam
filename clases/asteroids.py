@@ -26,6 +26,17 @@ class asteroids:
         return [self.body.position, self.body.angle]
     def get_worldcenter(self):
         return self.body.worldCenter
+    def put_texture(self, init):
+        if init == True:
+            glMatrixMode(GL_TEXTURE)
+            glPushMatrix()
+            glTranslatef(0.0625*int(self.tile),0.0,0.0)
+            glMatrixMode(GL_MODELVIEW)
+        else:
+            glMatrixMode(GL_TEXTURE)
+            glPopMatrix()
+            glMatrixMode(GL_MODELVIEW)
+
     def draw(self, xp):
         x = int(self.body.position[0]*3.10)+1
         if xp == -1:
@@ -58,8 +69,10 @@ class asteroids:
                 pass
 
             else:
+                self.put_texture(True)
                 glTranslatef( self.body.position[0] , self.body.position[1], 0.00)
                 glRotate(math.degrees(self.body.angle), 0, 0, 1)
                 glCallList(self.dl)
                 glRotate(math.degrees(self.body.angle), 0, 0, -1)
                 glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
+                self.put_texture(False)
