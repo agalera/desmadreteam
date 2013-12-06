@@ -20,7 +20,32 @@ class chunk:
         self.itemsDisplayList = []
         self.chunkDisplayList = [glGenLists(1), glGenLists(2)]
         self.worlds = worlds
+        self.asteroidsDisplayList = glGenLists(3)
+        self.generate_asteroidsDisplay_list()
         self.load_map()
+
+    def generate_asteroidsDisplay_list(self):
+        texture_info_temp = [1, 0];
+        textureXOffset = float(texture_info_temp[0]/16.0)+0.001
+        textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
+        textureHeight  = float(0.060)
+        textureWidth   = float(0.060)
+
+        glNewList(self.asteroidsDisplayList, GL_COMPILE)
+        glBegin(GL_QUADS)
+        glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
+        glVertex3f(-size_tile, -size_tile, 0)
+
+        glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
+        glVertex3f(size_tile, -size_tile, 0)
+
+        glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
+        glVertex3f( size_tile,  size_tile, 0)
+
+        glTexCoord2f(textureXOffset,textureYOffset)
+        glVertex3f(-size_tile, size_tile, 0)
+        glEnd()
+        glEndList()
 
     def check_object(self, position):
         x = int(position[0])
@@ -56,7 +81,6 @@ class chunk:
         except:
             return False
     def regenerate_items(self, xp):
-        #self.chunkDisplayList[2] = glGenLists(3)
         glNewList(self.itemsDisplayList[xp], GL_COMPILE)
         for taa in self.items[xp]:
             self.create_tile(taa[0],taa[1],taa[2].get_tile())
@@ -226,7 +250,7 @@ class chunk:
                 tile = self.Matrix[3][x][y].get_tile()
                 if (tile != -1):
                 #    pass
-                    self.dynamics.append(asteroids(self.worlds.CreateDynamicBody(position=(x*size_tile,y*size_tile), angularDamping=10.0, linearDamping= 10.0), tile))
+                    self.dynamics.append(asteroids(self.worlds.CreateDynamicBody(position=(x*size_tile,y*size_tile), angularDamping=10.0, linearDamping= 10.0), tile,dl = self.asteroidsDisplayList))
         self.create_colision(shape)
 
     def create_tile(self,bx,by,tile):

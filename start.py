@@ -243,6 +243,7 @@ def initFun():
     civiles_muertos_DL = glGenLists(9)
     vida_DL = glGenLists(10)
     total_kills_DL = glGenLists(11)
+
     civiles = []
     civiles_muertos = []
     clases.audio.stationMusic(0)

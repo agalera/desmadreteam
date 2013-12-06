@@ -6,12 +6,13 @@ import math
 
 size_tile = 0.16
 class asteroids:
-    def __init__ (self,body, tile, densitys = 1, size_tmp = [0.90,0.90]):
+    def __init__ (self,body, tile, densitys = 1, size_tmp = [0.90,0.90], dl = None):
         self.body = body
         self.body.userData = self
         self.damage = 0.0
         self.tile = tile
         self.body.CreatePolygonFixture(box=(size_tile*size_tmp[0],size_tile*size_tmp[1]),density=densitys, friction= 10)
+        self.dl = dl
 
     def get_body(self):
         return self.body
@@ -57,26 +58,8 @@ class asteroids:
                 pass
 
             else:
-                texture_info_temp = [int(self.tile), 0];
-                textureXOffset = float(texture_info_temp[0]/16.0)+0.001
-                textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
-                textureHeight  = float(0.060)
-                textureWidth   = float(0.060)
-
                 glTranslatef( self.body.position[0] , self.body.position[1], 0.00)
                 glRotate(math.degrees(self.body.angle), 0, 0, 1)
-                glBegin(GL_QUADS)
-                glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
-                glVertex3f(-size_tile, -size_tile, 0)
-
-                glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
-                glVertex3f(size_tile, -size_tile, 0)
-
-                glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
-                glVertex3f( size_tile,  size_tile, 0)
-
-                glTexCoord2f(textureXOffset,textureYOffset)
-                glVertex3f(-size_tile, size_tile, 0)
-                glEnd()
+                glCallList(self.dl)
                 glRotate(math.degrees(self.body.angle), 0, 0, -1)
                 glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
