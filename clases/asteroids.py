@@ -53,7 +53,7 @@ class asteroids:
             glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
         else:
 
-            if (x+30 < xp or xp < x-30):
+            if (x+ 19 < xp or xp < x- 19):
                 pass
 
             else:

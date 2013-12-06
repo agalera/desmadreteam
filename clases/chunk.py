@@ -119,17 +119,18 @@ class chunk:
         #real dynamics
     def draw_dynamics(self,position):
         xp = int(position[0][0]*3.10)+1
-        repintar = 0
+        #repintar = 0
+        #for taa in self.dynamics:
+        #    if (taa.get_awake() == True):
+        #        repintar = 1
+        #        break
+        #if repintar == 0:
+        #    #pinto itemsDisplayList
+        #    pass
+        #else:
+        #
         for taa in self.dynamics:
-            if (taa.get_awake() == True):
-                repintar = 1
-                break
-        if repintar == 0:
-            #pinto itemsDisplayList
-            pass
-        else:
-            for taa in self.dynamics:
-                taa.draw(xp)
+            taa.draw(xp)
 
 
     def load_map(self):

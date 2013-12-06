@@ -298,9 +298,8 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    pass
-    #for i in range(8):
-    #    civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
+    for i in range(8):
+        civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
 
 
 def reshapeFun(wi,he):
