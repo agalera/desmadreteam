@@ -38,34 +38,26 @@ class armas:
         if (self.block_fire < 0.0):
             self.block_fire = self.delay
             body_tmp = self.body.get_body()
-            if (self.type_id == 1 or self.type_id == 2):
+            if (self.type_id == 1 or self.type_id == 2 or self.type_id == 3):
                 clases.audio.efectSound(26)
                 self.bullet.append(disparos(self.world.CreateDynamicBody(
                     position=(body_tmp.position[0]+(math.cos(body_tmp.angle)*0.22),body_tmp.position[1]+(math.sin(body_tmp.angle)*0.22)),
-                    bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
-                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=self.damage),
-                    linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0)
-                )
+                    bullet=True, angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
+                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)),isSensor= False, density=self.damage),
+                    linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0))
             if (self.type_id == 3):
-                clases.audio.efectSound(26)
-                self.bullet.append(disparos(self.world.CreateDynamicBody(
-                    position=(body_tmp.position[0]+(math.cos(body_tmp.angle)*0.22),body_tmp.position[1]+(math.sin(body_tmp.angle)*0.22)),
-                    bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
-                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=self.damage),
-                    linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0)
-                )
                 body_tmp.angle += 0.2
                 self.bullet.append(disparos(self.world.CreateDynamicBody(
                     position=(body_tmp.position[0]+(math.cos(body_tmp.angle)*0.22),body_tmp.position[1]+(math.sin(body_tmp.angle)*0.22)),
-                    bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
-                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=self.damage),
+                    bullet=True, angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
+                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)),isSensor= False, density=self.damage),
                     linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0)
                 )
                 body_tmp.angle -= 0.4
                 self.bullet.append(disparos(self.world.CreateDynamicBody(
                     position=(body_tmp.position[0]+(math.cos(body_tmp.angle)*0.22),body_tmp.position[1]+(math.sin(body_tmp.angle)*0.22)),
-                    bullet=True,angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
-                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)), density=self.damage),
+                    bullet=True, angle = body_tmp.angle,  angularDamping=0.0, linearDamping= 5.0,
+                    fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)),isSensor= False, density=self.damage),
                     linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0)
                 )
                 body_tmp.angle += 0.4
