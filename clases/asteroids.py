@@ -15,6 +15,8 @@ class asteroids:
 
     def get_body(self):
         return self.body
+    def get_awake(self):
+        return self.body.awake
     def touch(self, touch):
         pass
     def add_damage(self, fl):

@@ -298,8 +298,9 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    for i in range(8):
-        civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
+    pass
+    #for i in range(8):
+    #    civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
 
 
 def reshapeFun(wi,he):
@@ -349,6 +350,7 @@ def new_frame(init):
 def RenderGLFun():
     global status_global
     if status_global == 0 or status_global == 3:
+        updateFPS()
         getDelta()
         glClearColor(0.0,0.0,0.0,0.0)
         glClear(GL_COLOR_BUFFER_BIT)
@@ -366,6 +368,8 @@ def RenderGLFun():
 
     #pepito
     elif status_global == 1:
+        #updateFPS()
+        #getDelta()
         update()
         #---- Init Experimental zone ----
         global animate
