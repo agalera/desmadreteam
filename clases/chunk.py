@@ -19,7 +19,7 @@ class chunk:
         self.Matrix = []
         self.items = []
         self.itemsDisplayList = []
-        self.chunkDisplayList = [glGenLists(1), glGenLists(2)]
+        self.chunkDisplayList = glGenLists(2)
         self.worlds = worlds
         self.global_DL = global_DL
         self.load_map()
@@ -99,9 +99,9 @@ class chunk:
                 shapes=b2PolygonShape(box=((longitud+0.5)*size_tile,size_tile/2)),
             )
     def draw_static(self):
-        glCallList(self.chunkDisplayList[0])
+        glCallList(self.chunkDisplayList)
     def draw_decoration(self):
-        glCallList(self.chunkDisplayList[1])
+        glCallList(self.chunkDisplayList+1)
 
     def draw_items(self, position):
         xp = int(position[0][0]*3.10)+1
@@ -162,15 +162,15 @@ class chunk:
                 xasd = 0
                 MatrixT = [[0 for xasd in xrange(self.total_y)] for xasd in xrange(self.total_x)]
                 print "matrixt generado"
-                tmp_v = 3
+                
                 for taa in range(int(self.total_x/8)):
                     self.items.append([])
-                    self.itemsDisplayList.append((glGenLists(tmp_v)))
-                    tmp_v +=1
+                    self.itemsDisplayList.append((glGenLists(1)))
+                
             if pepe[0] == '  <data encoding="csv">':
                 capa +=1
                 if (capa < 2):
-                    glNewList(self.chunkDisplayList[capa], GL_COMPILE)
+                    glNewList(self.chunkDisplayList+capa, GL_COMPILE)
                 estado = 1
             elif pepe[0] == '</data>':
                 if (capa < 2):
@@ -240,18 +240,23 @@ class chunk:
         textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
         textureHeight  = float(0.060)
         textureWidth   = float(0.060)
-
+        
         glBegin(GL_QUADS)
         glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
         glVertex3f(bx-(size_tile/2), by-(size_tile/2), 0)
-
+        
         glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
         glVertex3f(bx + (size_tile/2), by-(size_tile/2), 0)
-
+        
         glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
         glVertex3f(bx + (size_tile/2), by+(size_tile/2), 0)
-
+        
         glTexCoord2f(textureXOffset,textureYOffset)
         glVertex3f(bx-(size_tile/2),by+(size_tile/2), 0)
-
+        
         glEnd()
+        #glTranslatef( bx , by, 0.0)
+        #glRotate(0, 0, 0, 1)
+        #glCallList(self.global_DL+tile)
+        #glRotate(0, 0, 0, -1)
+        #glTranslatef( -bx , -by, -0.0)

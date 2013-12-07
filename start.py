@@ -241,14 +241,17 @@ def initFun():
     last_kill = [-1,-1]
     last_damage = 0.0
     total_kills = 0
-    civiles_muertos_DL = glGenLists(9)
-    vida_DL = glGenLists(10)
-    total_kills_DL = glGenLists(11)
-    global_DL = [glGenLists(12)]
+    civiles_muertos_DL = glGenLists(1)
+    vida_DL = glGenLists(1)
+    total_kills_DL = glGenLists(1)
+    global_DL = glGenLists(256)
 
-    glNewList(global_DL[0], GL_COMPILE)
-    basicas.draw_cube(0.16)
-    glEndList()
+    tmp2 = 0
+    for taa in range(12,256 + 12):
+        glNewList(global_DL+tmp2, GL_COMPILE)
+        basicas.draw_cube(0.16, tmp2)
+        glEndList()
+        tmp2 += 1
 
     civiles = []
     civiles_muertos = []
@@ -274,6 +277,7 @@ def initFun():
     Lchunk.append(chunk(0,0, world, global_DL))
     enable_vsync()
     getDelta()
+
     #glEnable(GL_CULL_FACE)
     #glCullFace(GL_BACK )
 
@@ -307,12 +311,13 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    for i in range(10):
-        for i in range(8):
-            if i * 16 == 16:
-                pass
-            else:
-                civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk, global_DL))
+    pass
+    #for i in range(10):
+    #    for i in range(8):
+    #        if i * 16 == 16:
+    #            pass
+    #        else:
+    #            civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk, global_DL))
 
 
 def reshapeFun(wi,he):
@@ -524,7 +529,7 @@ def draw_kills():
         draw_kill(1.0, tmp[1])
         draw_kill(1.4, tmp[0])
         glEndList()
-        
+
     glCallList(total_kills_DL)
 
 

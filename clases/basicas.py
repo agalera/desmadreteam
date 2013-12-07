@@ -16,10 +16,10 @@ def put_texture(init, tile = 0):
         glMatrixMode(GL_TEXTURE)
         glPopMatrix()
         glMatrixMode(GL_MODELVIEW)
-def draw_cube(size_tile):
-    texture_info_temp = [0, 0];
-    textureXOffset = 0.0
-    textureYOffset = 0.0
+def draw_cube(size_tile, tile = 0):
+    texture_info_temp = [int(tile), 0];
+    textureXOffset = float(texture_info_temp[0]/16.0)+0.001
+    textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
     textureHeight  = float(0.060)
     textureWidth   = float(0.060)
 

@@ -57,10 +57,10 @@ class components:
             texture_info_temp = int(self.id_t)
         if (angle != False):
             self.position[1] = angle
-        basicas.put_texture(True, texture_info_temp)
+        #basicas.put_texture(True, texture_info_temp)
         glTranslatef( self.position[0][0] , self.position[0][1], zindex)
         glRotate(math.degrees(self.position[1]), 0, 0, 1)
-        glCallList(self.global_DL[0])
+        glCallList(self.global_DL+texture_info_temp)
         glRotate(math.degrees(self.position[1]), 0, 0, -1)
         glTranslatef( -self.position[0][0] , -self.position[0][1], -zindex)
-        basicas.put_texture(False)
+        #basicas.put_texture(False)

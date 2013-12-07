@@ -11,7 +11,7 @@ class asteroids:
         self.body = body
         self.body.userData = self
         self.damage = 0.0
-        self.tile = tile
+        self.tile = tile - (256*int(tile/ 256))
         self.body.CreatePolygonFixture(box=(size_tile*size_tmp[0],size_tile*size_tmp[1]),density=densitys, friction= 10)
         self.dl = dl
 
@@ -60,10 +60,11 @@ class asteroids:
                 pass
 
             else:
-                basicas.put_texture(True, self.tile)
+                #basicas.put_texture(True, self.tile)
                 glTranslatef( self.body.position[0] , self.body.position[1], 0.00)
                 glRotate(math.degrees(self.body.angle), 0, 0, 1)
-                glCallList(self.dl[0])
+                glCallList(self.dl+self.tile)
+                
                 glRotate(math.degrees(self.body.angle), 0, 0, -1)
                 glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
-                basicas.put_texture(False)
+                #basicas.put_texture(False)
