@@ -79,7 +79,8 @@ class civil:
         self.body.draw(self.id_sangre, self.sangre_angle)
     def open_fire(self, body_tmp):
             self.arma.use()
-
+    def get_masterclass(self):
+        return self.player
     def draw(self, t_delta, animate):
 
         if (self.mode_normal == False and self.body.get_vivo() == True):

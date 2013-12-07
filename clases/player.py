@@ -58,7 +58,7 @@ class player:
 
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
-        self.body = components(self.create_box(pos), self, 1, self.world,self.global_DL)
+        self.body = components(self.create_box(pos), self, 1, self.world,self.global_DL, False)
         self.arma = armas(3, self.bullet, self.body, self.world, self.global_DL)
         #
     def set_other_body(self, var, var2):
@@ -110,9 +110,6 @@ class player:
         self.joints.append(self.world.CreateJoint(tmp))
 
     def get_position(self):
-        if (self.other_body != None):
-            self.create_rope(self.other_body, self.relative_pos)
-            self.other_body = None
         return self.body.get_position()
 
     def draw(self, radians, animate, wasd):

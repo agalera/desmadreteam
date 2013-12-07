@@ -5,10 +5,10 @@ from OpenGL.GLU import *
 from Box2D import *
 import math
 import clases.basicas as basicas
-
 size_tile = 0.16
 class components:
-    def __init__ (self,main, masterclass, id_t, world, global_DL):
+    def __init__ (self,main, masterclass, id_t, world, global_DL, draw_optional = True):
+        self.draw_optional = draw_optional
         self.global_DL = global_DL
         self.world = world
         self.main = main
@@ -18,6 +18,7 @@ class components:
         self.vivo = True
         self.position = [[0,0],0]
         #self.damage = 0.0
+
     def get_vivo(self):
         return self.vivo
     def set_vivo(self):
@@ -58,6 +59,12 @@ class components:
         if (angle != False):
             self.position[1] = angle
         #basicas.put_texture(True, texture_info_temp)
+        if self.draw_optional:
+            x2 = self.masterclass.get_masterclass().get_position()[0][0]
+            if (x2+ 6 < self.position[0][0] or self.position[0][0] < x2- 6):
+                return False
+
+            #print self.position[0][0] , self.position[0][1], zindex
         glTranslatef( self.position[0][0] , self.position[0][1], zindex)
         glRotate(math.degrees(self.position[1]), 0, 0, 1)
         glCallList(self.global_DL+texture_info_temp)
