@@ -411,7 +411,9 @@ def RenderGLFun():
         player.draw(radians, animate, wasd) #components.py:31 opengl
         setupTexture(2)
         for taa in list(bullet):
-            taa.draw()
+            if(taa.draw()):
+                world.DestroyBody(taa.get_body())
+                bullet.remove(taa)
         setupTexture(5)
         trenecito.draw(t_delta)
         #GUI

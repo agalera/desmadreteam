@@ -10,6 +10,7 @@ class disparos:
     def __init__ (self,body, hook, global_DL):
         self.global_DL = global_DL
         self.body = body
+        self.init_pos = [self.body.position[0],self.body.position[1]]
         self.hook = hook
         self.body.userData = self
     def get_hook(self):
@@ -31,6 +32,8 @@ class disparos:
         return [self.body.position, self.body.angle]
 
     def draw(self):
+        if(math.hypot(self.init_pos[0] - self.body.position[0], self.init_pos[1] - self.body.position[1])>5):
+            return True
         basicas.put_texture(True, 1)
         glTranslatef( self.body.position[0] , self.body.position[1], 0.00)
         glRotate(math.degrees(self.body.angle), 0, 0, 1)
@@ -40,3 +43,4 @@ class disparos:
         glRotate(math.degrees(self.body.angle), 0, 0, -1)
         glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
         basicas.put_texture(False)
+        return False
