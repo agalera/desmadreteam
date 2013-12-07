@@ -62,6 +62,7 @@ class chunk:
         for taa in self.items[xp]:
             self.create_tile(taa[0],taa[1],taa[2].get_tile())
         glEndList()
+
     def create_colision_triangle(self,xy,left):
 
         #    if (sa[1][0]-sa[0][0] == 0):
@@ -170,7 +171,6 @@ class chunk:
                 capa +=1
                 if (capa < 2):
                     glNewList(self.chunkDisplayList[capa], GL_COMPILE)
-
                 estado = 1
             elif pepe[0] == '</data>':
                 if (capa < 2):

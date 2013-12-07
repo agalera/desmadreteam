@@ -524,12 +524,13 @@ def draw_kills():
         draw_kill(1.0, tmp[1])
         draw_kill(1.4, tmp[0])
         glEndList()
+        
     glCallList(total_kills_DL)
+
 
 def draw_kill(bxs,numerito):
 
     tile = int(numerito)+14
-    size_tile = 0.16
     #v_object_select = player.get_position()[0]
     #print v_object_select
     bx = zoom - bxs
@@ -604,7 +605,7 @@ def draw_civils():
             civiles.remove(taa)
     if (tmp == True):
         glNewList(civiles_muertos_DL, GL_COMPILE)
-        #glCallList(civiles_muertos_DL)
+
         for taa in list(civiles_muertos):
             setupTexture(3)
             taa.draw_sangre()

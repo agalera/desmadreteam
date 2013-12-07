@@ -62,4 +62,4 @@ class armas:
                     fixtures=b2FixtureDef(shape=b2CircleShape(radius=(size_tile/8.0)),isSensor= False, density=self.damage),
                     linearVelocity=(50*math.cos(body_tmp.angle), 50*math.sin(body_tmp.angle))), 0,self.global_DL)
                 )
-                body_tmp.angle += 0.4
+                body_tmp.angle += 0.2
