@@ -17,8 +17,9 @@ from consumibles import consumibles
 size_tile = 0.16
 
 class civil:
-    def __init__ (self, pos_init, world, tileid, player, bullet, Lchunk):
+    def __init__ (self, pos_init, world, tileid, player, bullet, Lchunk, global_DL):
         #self.world = world
+        self.global_DL = global_DL
         self.Lchunk = Lchunk
         self.bullet = bullet
         self.player = player
@@ -34,7 +35,7 @@ class civil:
         self.damage = 0.0
         if self.tileid == 16:
 
-            self.arma = armas(randint(1,3), self.bullet, self.body, self.world)
+            self.arma = armas(randint(1,3), self.bullet, self.body, self.world, self.global_DL)
         else:
             self.arma = None
     def add_damage(self, damages):
@@ -62,7 +63,7 @@ class civil:
 
     def create_player(self):
         pos = [self.pos_init[0],self.pos_init[1]]
-        self.body = components(self.create_box(pos), self, 1, self.world)
+        self.body = components(self.create_box(pos), self, 1, self.world, self.global_DL)
         #self.body.userData
 
     def create_box(self, pos):

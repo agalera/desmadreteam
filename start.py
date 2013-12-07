@@ -18,7 +18,7 @@ import sys
 from Box2D import *
 import clases.audio
 from random import randint
-
+import clases.basicas as basicas
 
 resolution = [1600,800]
 radians = 0
@@ -227,6 +227,7 @@ def initFun():
     global world
     global civiles
     global civiles_muertos
+    global global_DL
     global civiles_muertos_DL
     global vida_DL
     global last_total_kills
@@ -243,6 +244,11 @@ def initFun():
     civiles_muertos_DL = glGenLists(9)
     vida_DL = glGenLists(10)
     total_kills_DL = glGenLists(11)
+    global_DL = [glGenLists(12)]
+
+    glNewList(global_DL[0], GL_COMPILE)
+    basicas.draw_cube(0.16)
+    glEndList()
 
     civiles = []
     civiles_muertos = []
@@ -258,16 +264,18 @@ def initFun():
     textures.append(loadImage('assets/gameover.png'))
     textures.append(loadImage('assets/frases1.png'))
 
-    player = player(bullet, joints, borrar)
+    player = player(bullet, joints, borrar, global_DL)
     myListener = myContactListener(borrar, player)
     myDestructor = myDestructionListener()
     world=b2World(contactListener=myListener, destructorListener=myDestructor) # default gravity is (0,-10) and doSleep is True
     world.gravity = (0, 0)
     player.set_world(world)
     trenecito = tren([115,29], world, bullet)
-    Lchunk.append(chunk(0,0, world))
+    Lchunk.append(chunk(0,0, world, global_DL))
     enable_vsync()
     getDelta()
+    #glEnable(GL_CULL_FACE)
+    #glCullFace(GL_BACK )
 
 def draw_pantallazo(num):
     setupTexture(num)
@@ -299,9 +307,12 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    pass
-    #for i in range(8):
-    #    civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk))
+    for i in range(10):
+        for i in range(8):
+            if i * 16 == 16:
+                pass
+            else:
+                civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk, global_DL))
 
 
 def reshapeFun(wi,he):

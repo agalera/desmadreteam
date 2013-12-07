@@ -8,10 +8,11 @@ from Box2D import *
 from objetos import objetos
 from armas import armas
 import copy
+import clases.basicas as basicas
 
 size_tile = 0.32
 class chunk:
-    def __init__ (self, x,y, worlds):
+    def __init__ (self, x,y, worlds, global_DL):
         self.dynamics = []
         self.x = x
         self.y = y
@@ -20,32 +21,8 @@ class chunk:
         self.itemsDisplayList = []
         self.chunkDisplayList = [glGenLists(1), glGenLists(2)]
         self.worlds = worlds
-        self.asteroidsDisplayList = glGenLists(3)
-        self.generate_asteroidsDisplay_list()
+        self.global_DL = global_DL
         self.load_map()
-
-    def generate_asteroidsDisplay_list(self):
-        texture_info_temp = [0, 0];
-        textureXOffset = float(texture_info_temp[0]/16.0)+0.001
-        textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
-        textureHeight  = float(0.060)
-        textureWidth   = float(0.060)
-
-        glNewList(self.asteroidsDisplayList, GL_COMPILE)
-        glBegin(GL_QUADS)
-        glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
-        glVertex3f(-size_tile/2, -size_tile/2, 0)
-
-        glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
-        glVertex3f(size_tile/2, -size_tile/2, 0)
-
-        glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
-        glVertex3f( size_tile/2,  size_tile/2, 0)
-
-        glTexCoord2f(textureXOffset,textureYOffset)
-        glVertex3f(-size_tile/2, size_tile/2, 0)
-        glEnd()
-        glEndList()
 
     def check_object(self, position):
         x = int(position[0])
@@ -250,7 +227,7 @@ class chunk:
                 tile = self.Matrix[3][x][y].get_tile()
                 if (tile != -1):
                 #    pass
-                    self.dynamics.append(asteroids(self.worlds.CreateDynamicBody(position=(x*size_tile,y*size_tile), angularDamping=10.0, linearDamping= 10.0), tile,dl = self.asteroidsDisplayList))
+                    self.dynamics.append(asteroids(self.worlds.CreateDynamicBody(position=(x*size_tile,y*size_tile), angularDamping=10.0, linearDamping= 10.0), tile, dl = self.global_DL))
         self.create_colision(shape)
 
     def create_tile(self,bx,by,tile):

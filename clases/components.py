@@ -4,10 +4,12 @@ from OpenGL.GLUT import *
 from OpenGL.GLU import *
 from Box2D import *
 import math
+import clases.basicas as basicas
 
 size_tile = 0.16
 class components:
-    def __init__ (self,main, masterclass, id_t, world):
+    def __init__ (self,main, masterclass, id_t, world, global_DL):
+        self.global_DL = global_DL
         self.world = world
         self.main = main
         self.id_t = id_t
@@ -43,37 +45,22 @@ class components:
     def get_worldcenter(self):
         return self.main.body.worldCenter
 
-    def draw(self, posible = False, angle = False, zindex= 0.1):
+    def draw(self, posible = False, angle = False, zindex= 0.0):
         if (self.main != None):
             self.position[0][0] = self.main.body.position[0]
             self.position[0][1] = self.main.body.position[1]
             self.position[1] = self.main.body.angle
 
         if (posible != False):
-            texture_info_temp = [int(posible), 0];
+            texture_info_temp = int(posible)
         else:
-            texture_info_temp = [int(self.id_t), 0]
+            texture_info_temp = int(self.id_t)
         if (angle != False):
             self.position[1] = angle
-        textureXOffset = float(texture_info_temp[0]/16.0)+0.001
-        textureYOffset = float(16 - int(texture_info_temp[0]/16)/16.0)-0.001
-        textureHeight  = float(0.060)
-        textureWidth   = float(0.060)
-
+        basicas.put_texture(True, texture_info_temp)
         glTranslatef( self.position[0][0] , self.position[0][1], zindex)
         glRotate(math.degrees(self.position[1]), 0, 0, 1)
-        glBegin(GL_QUADS)
-        glTexCoord2f(textureXOffset, textureYOffset - textureHeight)
-        glVertex2f(-size_tile, -size_tile)
-
-        glTexCoord2f(textureXOffset + textureWidth, textureYOffset - textureHeight)
-        glVertex2f(size_tile, -size_tile)
-
-        glTexCoord2f(textureXOffset + textureWidth, textureYOffset)
-        glVertex2f( size_tile,  size_tile)
-
-        glTexCoord2f(textureXOffset,textureYOffset)
-        glVertex2f(-size_tile, size_tile)
-        glEnd()
+        glCallList(self.global_DL[0])
         glRotate(math.degrees(self.position[1]), 0, 0, -1)
         glTranslatef( -self.position[0][0] , -self.position[0][1], -zindex)
+        basicas.put_texture(False)
