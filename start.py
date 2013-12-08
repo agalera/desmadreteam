@@ -206,7 +206,7 @@ def update():
 
     #print trenecito.get_position
     if (int(trenecito.get_position()[0][1]) == 4):
-        if (len(civiles) < 20):
+        if (len(civiles) < 24):
             generar_civiles()
     player.move(wasd, t_delta, radians)
 
@@ -311,12 +311,9 @@ def draw_pantallazo(num):
     #glTranslatef( -self.body.position[0] , -self.body.position[1], 0.00)
 
 def generar_civiles():
-    for i in range(10):
-        for i in range(8):
-            if i * 16 == 16:
-                pass
-            else:
-                civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk, global_DL))
+    #for i in range(10):
+    for i in range(8):
+        civiles.append(civil([18,7],world, i * 16, player, bullet, Lchunk, global_DL))
 
 
 def reshapeFun(wi,he):

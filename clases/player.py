@@ -45,7 +45,6 @@ class player:
         self.create_player()
     def add_damage(self, damage):
         self.damage -= damage
-        print "hola"
     def add_hp(self, hp):
         self.damage += hp
     def get_arma(self):

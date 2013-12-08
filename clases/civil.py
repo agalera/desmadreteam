@@ -86,6 +86,7 @@ class civil:
         if (self.mode_normal == False and self.body.get_vivo() == True):
             self.body.set_vivo()
             self.body.destruyeme()
+            self.body.set_draw_optional = False
         if (self.mode_normal == False and self.body.get_vivo() == False):
             self.body.draw(self.tileid+15, 0.0)
         else:

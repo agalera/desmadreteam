@@ -18,7 +18,8 @@ class components:
         self.vivo = True
         self.position = [[0,0],0]
         #self.damage = 0.0
-
+    def set_draw_optional(self, option):
+        self.draw_optional = option
     def get_vivo(self):
         return self.vivo
     def set_vivo(self):

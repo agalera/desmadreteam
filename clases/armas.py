@@ -11,14 +11,14 @@ class armas:
     def __init__ (self, type_id , bullet, body, world, global_DL):
         #
         if (type_id == 1):
-            self.delay = 600
-            self.damage = 100
+            self.delay = 400
+            self.damage = 500
         if (type_id == 2):
-            self.delay = 100
-            self.damage = 40
+            self.delay = 200
+            self.damage = 100
         if (type_id == 3):
-            self.delay = 800
-            self.damage = 30
+            self.delay = 700
+            self.damage = 900
         self.global_DL = global_DL
         self.type_id = type_id
         self.bullet = bullet
